@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Grid Layout Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .grid-item img {
+            width: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid">
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.02.58.png" alt="Image 1">
+        </div>
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.12.34.png" alt="Image 2">
+        </div>
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.02.49.png" alt="Image 3">
+        </div>
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.02.43.png" alt="Image 4">
+        </div>
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.02.34.png" alt="Image 5">
+        </div>
+        <div class="grid-item">
+            <img src="/Users/macbookprom3/Desktop/Web development/settler website - tailwind /pics/ბინა 2/Screenshot 2024-05-10 at 10.02.23.png" alt="Image 6">
+        </div>
+    </div>
+</body>
+</html>

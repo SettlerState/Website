@@ -1,0 +1,71 @@
+
+/* Tail (arrow) for the popover */
+#pricePopover::before {
+  content: '';
+  position: absolute;
+  border-bottom-color: white; /* The color of the arrow, should match the popover's background */
+  border-top: none; /* No border on the top to create the 'V' shape */
+}
+
+/* When popover is visible */
+#pricePopover:not(.hidden) {
+  display: block;
+}
+
+/* Custom CSS for button styling */
+.searchbar-button {
+  color: #000000; /* black text */
+  background-color: #FFFFFF; /* white background */
+  border: 1px solid #c8cbcd; /* light grey border */
+  border-radius: 4px; /* subtle rounding of corners */
+}
+
+.searchbar-button:hover {
+  transition: background-color 0.2s; /* smooth background color transition on hover */
+  background-color: #c8cbcd; /* lighter grey on hover, equivalent to hover:bg-gray-200 in Tailwind */
+  cursor: pointer; /* to indicate the button is clickable */
+}
+
+.searchbar-button:focus {
+  outline: none; /* Removes default browser outline */
+  background-color: #c8cbcd; /* Zillow blue */
+}
+
+.standard-border{
+  color: #000000; /* black text */
+  background-color: #FFFFFF; /* white background */
+  border: 1px solid #c8cbcd; /* light grey border */
+  border-radius: 4px; /* subtle rounding of corners */
+  transition: background-color 0.2s; /* smooth background color transition on hover */
+  cursor: pointer; /* to indicate the button is clickable */
+  
+}
+
+.popover-input-hover:hover {
+  outline: none; /* Removes default browser outline */
+  border-color: #337680; /* Zillow blue */
+}
+
+.standard-color{
+  color: #337680; /* black text */
+}
+
+.standard-bg-color{
+  background-color: #337680; /* black text */
+}
+
+
+.popop-button-hover:hover {
+  background-color: transparent;
+  color: #337680;
+  border: 1px solid #337680;
+}
+
+.popup-button-focus:focus {
+  background-color: #337680;
+  color: #fdffff;
+}
+
+div input.popover-input-focus:focus {
+  outline-color: #337680;
+}

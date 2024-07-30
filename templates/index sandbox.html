@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Listings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        .thumbnail {
+            width: 100%;
+            height: 200px; /* Increase the height for larger thumbnails */
+            object-fit: cover;
+            border-radius: 8px; /* Make corners rounded */
+        }
+        .listing-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .listing-info span {
+            display: flex;
+            align-items: center;
+        }
+        .listing-info span:not(:last-child)::after {
+            content: "|";
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .listing-info .bold {
+            font-weight: bold;
+            margin-right: 4px; /* Add space between number and text */
+        }
+        .description {
+            font-size: 0.875rem; /* Adjust the font size */
+            color: #6b7280; /* Adjust the color to a lighter shade */
+            white-space: nowrap; /* Prevent line breaks */
+            overflow: hidden; /* Hide overflowing content */
+            text-overflow: ellipsis; /* Add ellipsis to truncated content */
+            display: block; /* Ensure the element is a block */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-2xl font-bold mb-4">Real Estate Listings</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for listing in listings %}
+            <div class="bg-white p-4 rounded-lg shadow-md relative">
+                <img src="{{ listing.image_url }}" class="thumbnail mb-4" alt="Image of the listing">
+                <h2 class="text-xl font-bold mb-2">${{ listing.price }}</h2>
+                <div class="listing-info">
+                    <span>{{ listing.district }}</span>
+                    <span><span class="bold">{{ listing.bedrooms }}</span> საძინებელი</span>
+                    <span><span class="bold">{{ listing.bathrooms }}</span> აბაზანა</span>
+                    <span><span class="bold">{{ listing.area }}</span> მ²</span>
+                </div>
+                <div class="listing-info">
+                    <span>{{ listing.build_period }}</span>
+                    <span>{{ listing.renovation }}</span>
+                </div>
+                <p class="description">{{ listing.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

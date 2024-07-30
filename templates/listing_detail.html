@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Detail</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <style>
+        .attribute {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            margin-right: 16px;
+            font-size: 1rem; /* Adjusted font size */
+        }
+        .attribute .value {
+            font-size: 1.9rem; /* Adjusted font size for the numbers */
+            color: #333; /* Darker gray for numbers */
+            margin-bottom: 0; /* Remove bottom margin */
+        }
+        .attribute .label {
+            color: #777; /* Lighter gray for the labels */
+            font-weight: normal; /* Normal weight for labels */
+            margin-top: -10px; /* Decrease the space between the number and label */
+            font-size: 1rem; /* Adjusted font size for labels */
+        }
+        .swiper-container {
+            width: 100%;
+            height: 400px; /* Adjust the height as needed */
+            margin-bottom: 20px;
+            overflow: hidden; /* Ensure no overflow */
+        }
+        .swiper-slide {
+            text-align: center;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Make sure the entire image is visible */
+            border-radius: 8px;
+        }
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px; /* Adjust this margin as needed */
+        }
+        .header-section div {
+            flex: 1;
+        }
+        .attributes-section {
+            display: flex;
+            flex-direction: row; /* Align items horizontally */
+            align-items: center;
+            justify-content: flex-end; /* Align to the right */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <!-- Image Gallery Section -->
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {% for image_url in listing.image_urls %}
+                    <div class="swiper-slide">
+                        <img src="{{ image_url }}" alt="Image of the listing">
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+                <!-- Add Navigation -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            <!-- Header Section -->
+            <div class="header-section">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">${{ listing.price }}</h1>
+                    <p class="text-gray-600">{{ listing.district }}</p>
+                    <p class="text-gray-600">{{ listing.build_period }}</p>
+                </div>
+                <!-- Attributes Section -->
+                <div class="attributes-section">
+                    <div class="attribute">
+                        <span class="value">{{ listing.bedrooms }}</span>
+                        <span class="label">საძინებელი</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="value">{{ listing.bathrooms }}</span>
+                        <span class="label">სველი წერტილი</span>
+                    </div>
+                    <div class="attribute">
+                        <span class="value">{{ listing.area }}</span>
+                        <span class="label">კვ.მ</span>
+                    </div>
+                </div>
+            </div>
+            <p class="description text-gray-700 mb-4 mt-4">{{ listing.description }}</p>
+            <div class="mt-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">ვიზიტის დაჯავშნა</button>
+            </div>
+        </div>
+        <a href="/" class="text-blue-500 mt-4 inline-block">უკან დაბრუნება</a>
+    </div>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            centeredSlides: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            on: {
+                init: function() {
+                    console.log('Swiper initialized');
+                    const container = document.querySelector('.swiper-container');
+                    const wrapper = document.querySelector('.swiper-wrapper');
+                    const slides = document.querySelectorAll('.swiper-slide');
+
+                    function logElementDetails(element, elementName) {
+                        const rect = element.getBoundingClientRect();
+                        console.log(`${elementName} size:`, rect.width, rect.height);
+                        console.log(`${elementName} styles:`, window.getComputedStyle(element));
+                    }
+
+                    logElementDetails(container, 'Container');
+                    logElementDetails(wrapper, 'Wrapper');
+                    slides.forEach((slide, index) => {
+                        logElementDetails(slide, `Slide ${index + 1}`);
+                    });
+
+                    window.addEventListener('load', () => {
+                        console.log('Page fully loaded');
+                        logElementDetails(container, 'Container (on load)');
+                        logElementDetails(wrapper, 'Wrapper (on load)');
+                        slides.forEach((slide, index) => {
+                            logElementDetails(slide, `Slide ${index + 1} (on load)`);
+                        });
+                    });
+                },
+            },
+        });
+    </script>
+</body>
+</html>
