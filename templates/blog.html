@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scratchbook 2</title>
+    <title>ბლოგი</title>
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="styles.css" rel="stylesheet">
+     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
     <!-- Header already provided above, including it in your complete page -->
@@ -14,11 +14,11 @@
 
     <!-- Blog Section -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 class="text-2xl font-semibold mb-5" style="color: #337680;">ახალი პოსეტები</h2>
+        <h2 class="text-2xl font-semibold mb-5" style="color: #337680;">ახალი პოსტები</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Example Blog Post -->
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">ახალი თუ ძველი აშენებული ბინები?</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">როგორ მოვაწყოთ ახალი ბინა იაფად?</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">საუკეთესო პერიოდი ბინის შესაძენად</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -72,7 +72,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -81,7 +81,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
@@ -90,7 +90,7 @@
                 </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="/Users/macbookprom3/Desktop/cover.jpeg" alt="Blog Image" class="w-full h-48 object-cover"> 
+                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
                     <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
                     <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
