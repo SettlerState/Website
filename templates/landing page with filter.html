@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Settler | ბინები საუკეთესო ფასად</title>
+   <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
+   <style>
+       .filter-button {
+           background-color: #ffffff;
+           border: 1px solid #ddd;
+           border-radius: 0.375rem;
+           padding: 0.5rem 1rem;
+           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+           display: flex;
+           align-items: center; /* Align text and icon vertically */
+           justify-content: center; /* Center content horizontally */
+           height: 2.5rem; /* Ensure all buttons have the same height */
+           box-sizing: border-box; /* Include padding and border in the element’s total width and height */
+       }
+
+       .filter-button:hover {
+           background-color: #f0f0f0;
+       }
+
+       .popover {
+           background-color: #ffffff;
+           border-radius: 0.375rem;
+           z-index: 20;
+           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+       }
+
+       .popover-button {
+           background-color: #ffffff;
+           border: 1px solid #ddd;
+           border-radius: 0.375rem;
+           padding: 0.5rem 1rem;
+           margin-right: 0.5rem;
+       }
+
+       .popover-button:hover,
+       .popover-button.active {
+           background-color: #078bf7;
+           color: #ffffff;
+       }
+
+       .custom-search-button {
+           background-color: #078bf7;
+           color: #ffffff;
+           border: none;
+           font-weight: bold;
+           padding: 0.5rem 1rem;
+           border-radius: 0.375rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease;
+       }
+
+       .custom-search-button:hover {
+           background-color: #075ff7;
+       }
+
+       #header-spacing {
+           padding-bottom: 0.5rem;
+           padding-top: 0.3rem;
+       }
+
+       #hotOffersSection .inline-block {
+           display: inline-block;
+       }
+
+       #hotOffersSection .inline-block > div {
+           display: inline-block;
+           vertical-align: top;
+           width: 300px; /* Adjust width as needed */
+           margin-right: 1rem; /* Space between items */
+       }
+
+       .description {
+           font-size: 0.875rem;
+           color: #6b7280;
+           white-space: normal; /* Allow text to wrap */
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       .thumbnail {
+           width: 100%;
+           height: 200px;
+           object-fit: cover;
+           border-radius: 0.5rem;
+       }
+
+       .listing-info {
+           display: flex;
+           align-items: center;
+           flex-wrap: wrap;
+       }
+
+       .listing-info span {
+           display: flex;
+           align-items: center;
+       }
+
+       .listing-info span:not(:last-child)::after {
+           content: "|";
+           margin: 0 0.5rem;
+       }
+
+       .listing-info .bold {
+           font-weight: bold;
+           margin-right: 4px;
+       }
+
+       .description {
+           font-size: 0.875rem;
+           color: #6b7280;
+           white-space: nowrap;
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       #hotOffersSection {
+           position: relative;
+           padding-top: 1.2rem;
+       }
+
+       main {
+           margin-top: 3rem;
+           margin-bottom: 3rem;
+           padding: 1rem;
+       }
+
+       .relative {
+           position: relative;
+       }
+
+       #locationButton {
+           position: relative;
+           background-color: #ffffff;
+           border: none;
+           padding: 0.5rem 1rem;
+           border-radius: 5px;
+           cursor: pointer;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           height: 2.5rem;
+           box-sizing: border-box;
+       }
+
+       #locationButton:hover {
+           background-color: #f0f0f0;
+       }
+
+       .dropdown-content {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           z-index: 1;
+           background-color: white;
+           border: 1px solid #ccc;
+           padding: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+           width: 100%;
+           max-height: 200px;
+           overflow-y: auto; /* Enable vertical scrolling when content exceeds max-height */
+       }
+
+       .dropdown-content label {
+           display: flex;
+           align-items: center;
+           margin-bottom: 8px;
+       }
+
+       .dropdown-content input[type="checkbox"] {
+        margin-right: 8px; /* Space between checkbox and label text */
+        }
+
+       #hotOffersSection {
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        #hotOffersSection::-webkit-scrollbar {
+            display: none;
+        }
+
+        #prevButton,
+        #nextButton {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #prevButton:hover,
+        #nextButton:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+   </style>
+</head>
+<body class="bg-gray-100">
+   <!-- Header -->
+   <header class="bg-white">
+       <div class="mx-auto px-4">
+           <div class="flex justify-center items-center text-gray-800 text-xl" id="header-spacing">
+               <div class="flex-1 flex justify-start">
+                   <a href="#" class="py-2 px-3 hover:text-gray-300">ყიდვა</a>
+                   <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300">გაყიდვა</a>
+               </div>
+               <a href="{{ url_for('landing') }}" class="flex items-center">
+                   <img src="{{ url_for('static', filename='pics/settler logo .png') }}" alt="Logo" style="height: 70px; width: auto;">
+               </a>
+               <div class="flex-1 flex justify-end">
+                   <div class="hidden md:flex items-center space-x-1">
+                       <a href="#" class="py-2 px-3 hover:text-gray-300">შესვლა</a>
+                       <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300">ბლოგი</a>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </header>
+
+   <!-- Hero Image Strip -->
+   <div class="relative w-full bg-gray-300 h-64 md:h-96">
+       <img class="w-full h-full object-cover" src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Hero Image">
+       <div class="absolute inset-0 flex flex-col justify-center items-center px-14">
+           <div class="text-white text-xl md:text-5xl font-semibold mb-16 text-center">აღმოაჩინე ბინები <br> საუკეთესო ფასად</div>
+           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-14">
+               <form action="{{ url_for('landing') }}" method="get" id="searchForm" class="flex flex-wrap justify-center space-x-2">
+                   <!-- Location Filter Input -->
+                    <div class="relative">
+                        <button id="locationButton" type="button" class="filter-button">
+                            მდებარეობა
+                            <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div id="locationDropdown" class="dropdown-content">
+                            {% for district in districts %}
+                            <label>
+                                <input type="checkbox" name="district" value="{{ district }}">{{ district }}
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                   <!-- Price Filter Button and Popover Container -->
+                   <div class="relative">
+                       <button id="priceButton" type="button" class="filter-button">
+                           ფასი
+                           <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                           </svg>
+                       </button>
+                       <div class="hidden absolute left-0 mt-2 w-96 popover" id="pricePopover">
+                        <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">
+                           ფასის დიაპაზონი
+                        </div>
+                        <div class="p-4">
+                           <div class="flex flex-row mb-4 space-x-2">
+                              <div class="flex-1">
+                                 <label for="min-price" class="block">მინ.</label>
+                                 <input type="text" name="price_min" id="min-price" class="filter-button py-2 px-1 w-full" placeholder="$">
+                              </div>
+                              <div class="flex-1">
+                                 <label for="max-price" class="block">მაქს.</label>
+                                 <input type="text" name="price_max" id="max-price" class="filter-button py-2 px-1 w-full" placeholder="$">
+                              </div>
+                           </div>
+                           <div class="flex justify-center mt-4">
+                              <button type="button" class="filter-button text-white font-bold py-2 px-4 rounded" id="applyPriceButton">
+                              არჩევა
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+
+                   <!-- Bedrooms Filter Button and Popover Container -->
+                   <div class="relative">
+                       <button id="bedroomButton" type="button" class="filter-button">
+                           საძინებლები
+                           <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                           </svg>
+                       </button>
+                                            <div class="hidden absolute left-0 mt-2 w-96 popover bg-white border border-gray-200 rounded-lg shadow-lg" id="bedroomPopover">
+                        <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">
+                           საძინებლების რაოდენობა
+                        </div>
+                        <div class="p-4">
+                           <div class="flex border divide-x divide-gray-300" role="group">
+                              <button type="button" class="popover-button py-2 px-4 text-center border-r-0">სტუდიო</button>
+                              <button type="button" class="popover-button py-2 px-4 text-center border-r">1</button>
+                              <button type="button" class="popover-button py-2 px-4 text-center border-r">2</button>
+                              <button type="button" class="popover-button py-2 px-4 text-center border-r">3</button>
+                              <button type="button" class="popover-button py-2 px-4 text-center border-r">4</button>
+                              <button type="button" class="popover-button py-2 px-4 text-center">5</button>
+                           </div>
+                           <div class="flex justify-center mt-4">
+                              <button type="button" class="filter-button text-white font-bold py-2 px-4 rounded bg-blue-500" id="applyBedroomButton">
+                              არჩევა
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <input type="hidden" name="bedrooms" id="bedroomInput" value="">
+                  <button type="submit" class="custom-search-button py-2 px-4">ძიება</button>
+               </form>
+           </div>
+       </div>
+   </div>
+
+      <!-- Main Content -->
+        <main>
+    {% if show_hot_offers %}
+    <!-- Hot Offers Container -->
+    <h2 class="text-2xl font-bold mb-4">ფასდაკლებული ბინები</h2>
+    <div id="hotOffersCarousel" class="relative">
+        <!-- Previous Button -->
+        <button id="prevButton" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 z-10">
+            &#10094;
+        </button>
+
+        <div id="hotOffersSection" class="flex space-x-4 overflow-hidden">
+            {% for offer in listings %}
+            <div class="bg-white rounded-lg shadow-md p-4 w-64 flex-none transition-transform duration-300 ease-in-out">
+                <a href="{{ url_for('listing_detail', listing_id=offer.listing_id) }}">
+                    <img src="{{ offer.image_url }}" class="thumbnail mb-4" alt="Image of the listing">
+                </a>
+                <div class="text-lg font-semibold mb-2">${{ offer.price }}</div>
+                <div class="listing-info mb-4">
+                    <span>{{ offer.district }}</span>
+                    <span><span class="bold">{{ offer.bedrooms }}</span> საძინებელი</span>
+                    <span><span class="bold">{{ offer.bathrooms }}</span> აბაზანა</span>
+                    <span><span class="bold">{{ offer.area }}</span> მ²</span>
+                </div>
+                <div class="description">{{ offer.description }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Next Button -->
+        <button id="nextButton" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white rounded-full p-2 z-10">
+            &#10095;
+        </button>
+    </div>
+{% endif %}
+
+
+    {% if not show_hot_offers %}
+    <!-- Search Results Section (List) -->
+    <h2 class="text-2xl font-bold mb-4">ნაპოვნი ბინები</h2>
+    <div id="searchResultsSection">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for listing in listings %}
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <a href="{{ url_for('listing_detail', listing_id=listing.listing_id) }}">
+                    <img src="{{ listing.image_url }}" class="thumbnail mb-4" alt="Image of the listing">
+                </a>
+                <div class="text-lg font-semibold mb-2">${{ listing.price }}</div>
+                <div class="listing-info mb-4">
+                    <span>{{ listing.district }}</span>
+                    <span><span class="bold">{{ listing.bedrooms }}</span> საძინებელი</span>
+                    <span><span class="bold">{{ listing.bathrooms }}</span> აბაზანა</span>
+                    <span><span class="bold">{{ listing.area }}</span> მ²</span>
+                </div>
+                <div class="description">{{ listing.description }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</main>
+
+   <!-- Footer -->
+<footer class="bg-gray-800 text-white py-8">
+    <div class="max-w-5xl mx-auto px-4">
+        <div class="flex flex-wrap items-center justify-center gap-x-8">
+
+            <div class="w-full md:w-1/3 mt-6 md:mt-0">
+                <h3 class="text-lg font-bold mb-4">კონტაქტი</h3>
+                <ul>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ჩვენ შესახებ</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">კონტაქტი</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">პარტნიორები</a></li>
+                </ul>
+            </div>
+            <div class="w-full md:w-1/3 mt-6 md:mt-0">
+                <h3 class="text-lg font-bold mb-4">მიმდევრობები</h3>
+                <ul>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ფასდაკლება</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ახალი აშენებული</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">გაყიდვა</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+   <script>
+
+
+    // Handle location dropdown
+    const locationButton = document.getElementById('locationButton');
+    const dropdownContent = document.getElementById('locationDropdown');
+
+    locationButton.addEventListener('click', function () {
+        dropdownContent.style.display = dropdownContent.style.display === 'none' || dropdownContent.style.display === '' ? 'block' : 'none';
+    });
+
+    // Hide dropdown if clicking outside of it
+    document.addEventListener('click', function (event) {
+        if (!locationButton.contains(event.target) && !dropdownContent.contains(event.target)) {
+            dropdownContent.style.display = 'none';
+        }
+    });
+
+
+   document.addEventListener('DOMContentLoaded', function () {
+             var priceButton = document.getElementById('priceButton');
+             var pricePopover = document.getElementById('pricePopover');
+             var bedroomButton = document.getElementById('bedroomButton');
+             var bedroomPopover = document.getElementById('bedroomPopover');
+             var selectedBedrooms = null;
+
+             priceButton.addEventListener('click', function () {
+                 pricePopover.classList.toggle('hidden');
+                 bedroomPopover.classList.add('hidden'); // Hide other popover
+             });
+
+             bedroomButton.addEventListener('click', function () {
+                 bedroomPopover.classList.toggle('hidden');
+                 pricePopover.classList.add('hidden'); // Hide other popover
+             });
+
+             var bedroomButtons = bedroomPopover.querySelectorAll('.popover-button');
+             bedroomButtons.forEach(function (button) {
+                 button.addEventListener('click', function () {
+                     bedroomButtons.forEach(function (btn) {
+                         btn.classList.remove('active');
+                     });
+
+                     button.classList.add('active');
+                     selectedBedrooms = button.textContent.trim();
+                     var form = document.getElementById('searchForm');
+                     form.bedrooms.value = selectedBedrooms === '3+' ? 3 : selectedBedrooms;
+                     form.submit();
+                 });
+             });
+
+             document.addEventListener('click', function (event) {
+                 if (!priceButton.contains(event.target) && !pricePopover.contains(event.target)) {
+                     pricePopover.classList.add('hidden');
+                 }
+                 if (!bedroomButton.contains(event.target) && !bedroomPopover.contains(event.target)) {
+                     bedroomPopover.classList.add('hidden');
+                 }
+             });
+                     });
+                document.getElementById('nextButton').addEventListener('click', function() {
+                document.getElementById('hotOffersSection').scrollBy({
+                    left: 300,
+                    behavior: 'smooth'
+                });
+            });
+
+            document.getElementById('prevButton').addEventListener('click', function() {
+                document.getElementById('hotOffersSection').scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+
+   </script>
+
+</body>
+</html>
+
+
+
+

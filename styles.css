@@ -1,3 +1,7 @@
+.rotate-180 {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
 
 /* Tail (arrow) for the popover */
 #pricePopover::before {
@@ -14,22 +18,25 @@
 
 /* Custom CSS for button styling */
 .searchbar-button {
-  color: #000000; /* black text */
-  background-color: #FFFFFF; /* white background */
-  border: 1px solid #c8cbcd; /* light grey border */
-  border-radius: 4px; /* subtle rounding of corners */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #337680; /* Background color */
+  color: #FFFFFF; /* Text color */
+  border: 1px solid #c8cbcd; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer;
 }
 
 .searchbar-button:hover {
-  transition: background-color 0.2s; /* smooth background color transition on hover */
-  background-color: #c8cbcd; /* lighter grey on hover, equivalent to hover:bg-gray-200 in Tailwind */
-  cursor: pointer; /* to indicate the button is clickable */
+  background-color: #c8cbcd; /* Lighter background color on hover */
+  color: #000000; /* Text color on hover */
 }
 
 .searchbar-button:focus {
-  outline: none; /* Removes default browser outline */
-  background-color: #c8cbcd; /* Zillow blue */
+  outline: none; /* Remove default focus outline */
+  background-color: #c8cbcd; /* Background color on focus */
 }
+
 
 .standard-border{
   color: #000000; /* black text */
@@ -55,7 +62,7 @@
 }
 
 
-.popop-button-hover:hover {
+.popup-button-hover:hover {
   background-color: transparent;
   color: #337680;
   border: 1px solid #337680;
@@ -69,3 +76,15 @@
 div input.popover-input-focus:focus {
   outline-color: #337680;
 }
+
+#searchButton{
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #337680; /* Background color */
+  color: #FFFFFF; /* Text color */
+  border: 1px solid #c8cbcd; /* Border color */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer;
+}
+
+
