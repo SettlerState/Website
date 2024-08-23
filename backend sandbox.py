@@ -1,5 +1,6 @@
 import os
 import re
+import json
 import gspread
 import logging
 from flask import Flask, render_template, request, url_for
@@ -14,10 +15,14 @@ scope = [
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive'
 ]
-creds_path = r"C:\Users\user\PycharmProjects\Website\creds.json"
 
 # Initialize Flask app
 app = Flask(__name__)
+
+with open('config.json') as config_file:
+    config = json.load(config_file)
+
+creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
 
 
 def initialize_sheets():
@@ -249,6 +254,14 @@ def blog():
     return render_template('blog.html')
 
 
+@app.route('/test_env')
+def test_env():
+    creds_json = os.getenv('GOOGLE_CLOUD_CREDENTIALS')
+    if creds_json:
+        logger.info(f"Environment variable value: {creds_json}")
+        return "Environment variable is set.", 200
+    return "Environment variable is not set or empty.", 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
