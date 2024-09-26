@@ -83,7 +83,6 @@ def extract_attributes(complete_worksheet, filtered_worksheet, links):
                 if not price:
                     price = row[2]
                 listing_id = re.search(r'\d+$', link).group()
-
                 base_path = "static/images"
                 image_folder = os.path.join(base_path, listing_id)
                 logger.info(f"Base directory: {os.path.abspath(base_path)}")
@@ -179,7 +178,7 @@ def filter_listings(listings, area=None, price_min=None, price_max=None, bedroom
 
 @app.route('/test')
 def index():
-    """Render the index page without filters."""
+    """Render the index page without filters.doesnt contain filters"""
     global listings
     if not listings:
         initialize_listings()
@@ -210,7 +209,7 @@ def landing():
     bedrooms = request.args.get('bedrooms')
     districts = request.args.getlist('district')  # Use getlist to capture all selected districts
 
-    distinct_districts = sorted(set(listing['district'] for listing in listings))
+    distinct_districts = sorted(set(listing['district'] for listing in listings if listing['district'].strip()))
 
     filtered_listings = filter_listings(listings, area, price_min, price_max, bedrooms, districts)
 
