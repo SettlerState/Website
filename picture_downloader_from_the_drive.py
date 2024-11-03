@@ -6,7 +6,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 # Setup Google Sheets API
 scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-creds = ServiceAccountCredentials.from_json_keyfile_name("/Users/macbookprom3/Desktop/Web development/settler website/creds.json", scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    "/Users/macbookprom3/Desktop/Web development/settler website/creds.json", scope)
 client = gspread.authorize(creds)
 
 # Access the worksheet
@@ -18,6 +19,7 @@ folder_name_pattern = re.compile(r'ss\.ge/.*-(\d+)$')
 
 # Base directory to store the images
 base_dir = "/Users/macbookprom3/Desktop/Web development/settler website/listing pictures"  # Update this to your desired download location
+
 
 # Function to download image
 def download_image(url, folder_name, file_name):
@@ -32,6 +34,7 @@ def download_image(url, folder_name, file_name):
         print(f"Downloaded: {file_path}")
     else:
         print(f"Failed to download image from {url}")
+
 
 # Function to download images from a specified row
 def download_images_from_row(start_row):
@@ -52,6 +55,7 @@ def download_images_from_row(start_row):
                     img_num += 1
 
     print("Download completed.")
+
 
 # Specify the row from which to start downloading
 start_row = 168  # Change this to the desired starting row number

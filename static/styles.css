@@ -1,0 +1,374 @@
+.rotate-180 {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+/* Burger menu and mobile-specific styles */
+/* Burger menu and mobile-specific styles */
+@media (max-width: 768px) {
+    #burger {
+        display: block;
+    }
+
+    #mobile-menu {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow */
+        border: 1px solid #ddd; /* Optional border */
+        border-radius: 5px; /* Optional rounding */
+        transition: all 0.3s ease; /* Add transition */
+        background-color: #f8f8f8; /* Lighter color for visibility */
+        position: absolute; /* Optional: make it overlay the content */
+        top: 60px; /* Adjust based on your header height */
+        left: 0; /* Align with the left edge */
+        right: 0; /* Align with the right edge */
+        z-index: 50; /* Ensure it's above other elements */
+    }
+
+    /* Hide desktop links on mobile */
+    .md-hidden {
+        display: none; /* Ensure this hides desktop items */
+    }
+
+    #mobile-menu.show {
+    display: flex; /* Change to flex when shown */
+    opacity: 1; /* Fade in */
+    }
+    #mobile-menu a {
+    padding: 12px 16px; /* Increase padding for menu items */
+    transition: background-color 0.3s ease; /* Smooth background color change */
+    }
+
+    #mobile-menu a:hover {
+        background-color: #eaeaea; /* Change background on hover */
+    }
+    #burger {
+    color: #333; /* Change color */
+    }
+
+    #burger:hover {
+        color: #555; /* Darker on hover */
+    }
+
+
+}
+
+
+ @media (max-width: 768px) {
+        /* Adjust hero section height */
+        .relative.w-full.h-64.md\:h-96 {
+            height: auto; /* Allow the section to grow with content */
+        }
+        .filter-button, .custom-search-button {
+            width: 100%; /* Ensure filter buttons take full width on smaller screens */
+        }
+        /* Ensure the hero image fits */
+        .object-cover {
+            object-fit: cover;
+        }
+    }
+       .filter-button {
+           background-color: #ffffff;
+           border: 1px solid #ddd;
+           border-radius: 0.375rem;
+           padding: 0.5rem 1rem;
+           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+           display: flex;
+           align-items: center; /* Align text and icon vertically */
+           justify-content: center; /* Center content horizontally */
+           height: 2.5rem; /* Ensure all buttons have the same height */
+           box-sizing: border-box; /* Include padding and border in the element’s total width and height */
+       }
+
+       .filter-button:hover {
+           background-color: #f0f0f0;
+       }
+
+       .popover {
+           background-color: #ffffff;
+           border-radius: 0.375rem;
+           z-index: 20;
+           box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+       }
+
+       .popover-button {
+           background-color: #ffffff;
+           border: 1px solid #ddd;
+           border-radius: 0.375rem;
+           padding: 0.5rem 1rem;
+           margin-right: 0.5rem;
+       }
+
+       .popover-button:hover,
+       .popover-button.active {
+           background-color: #078bf7;
+           color: #ffffff;
+       }
+
+       .custom-search-button {
+           background-color: #078bf7;
+           color: #ffffff;
+           border: none;
+           font-weight: bold;
+           padding: 0.5rem 1rem;
+           border-radius: 0.375rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease;
+       }
+
+       .custom-search-button:hover {
+           background-color: #075ff7;
+       }
+
+       @media (max-width: 768px) {
+        .filter-button {
+            width: 100%;
+            text-align: left;
+        }
+
+        .relative {
+            width: 100%;
+        }
+
+        .popover {
+            width: 100%;
+            left: 0;
+        }
+
+        .custom-search-button {
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+@media (max-width: 768px) {
+    #searchForm {
+        margin-top: 10px; /* Adjust this value to increase or decrease the space */
+    }
+    section.relative {
+        padding-bottom: 20px; /* Add space between the bottom of the image and the filter box */
+    }
+}
+
+
+
+@media (max-width: 768px) {
+    /* Adjust the popover for mobile */
+    #bedroomPopover {
+        min-width: 100px; /* Set a minimum width to ensure all values fit */
+        left: 50%; /* Center the popover */
+        transform: translateX(-50%); /* Center adjustment */
+        padding: 0; /* Remove extra padding */
+    }
+
+    .popover-button {
+        padding: 0.5rem 0.75rem; /* Maintain original padding */
+        margin-right: 0.25rem; /* Space between buttons */
+        flex: none; /* Prevent buttons from stretching */
+    }
+
+    .popover-button:last-child {
+        margin-right: 0; /* No margin on the last button */
+    }
+
+    .custom-search-button {
+        width: 100%; /* Full width for the search button */
+        margin-top: 1rem; /* Space above search button */
+        padding: 0.5rem; /* Consistent padding */
+    }
+}
+
+
+
+       #header-spacing {
+           padding-bottom: 0.5rem;
+           padding-top: 0.3rem;
+       }
+
+       #hotOffersSection .inline-block {
+           display: inline-block;
+       }
+
+       #hotOffersSection .inline-block > div {
+           display: inline-block;
+           vertical-align: top;
+           width: 100%; /* Adjust width as needed */
+           max-width: 300px;
+           margin-right: 1rem; /* Space between items */
+       }
+
+       .description {
+           font-size: 0.875rem;
+           color: #6b7280;
+           white-space: normal; /* Allow text to wrap */
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       .thumbnail {
+           width: 100%;
+           height: 200px;
+           object-fit: cover;
+           border-radius: 0.5rem;
+       }
+
+       .listing-info {
+           display: flex;
+           align-items: center;
+           flex-wrap: wrap;
+       }
+
+       .listing-info span {
+           display: flex;
+           align-items: center;
+       }
+
+       .listing-info span:not(:last-child)::after {
+           content: "|";
+           margin: 0 0.5rem;
+       }
+
+       .listing-info .bold {
+           font-weight: bold;
+           margin-right: 4px;
+       }
+
+       .description {
+           font-size: 0.875rem;
+           color: #6b7280;
+           white-space: nowrap;
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+       #hotOffersSection {
+           position: relative;
+           padding-top: 1.2rem;
+       }
+
+       main {
+           margin-bottom: 3rem;
+       }
+
+       .relative {
+           position: relative;
+       }
+
+
+
+       #locationButton:hover, #bedroomButton:hover, #priceButton:hover {
+           background-color: #B0B7C0;
+           color: white;
+       }
+
+       .dropdown-content {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 0;
+           z-index: 1;
+           background-color: white;
+           border: 1px solid #ccc;
+           padding: 10px;
+           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+           width: 100%;
+           max-height: 200px;
+           overflow-y: auto; /* Enable vertical scrolling when content exceeds max-height */
+       }
+
+       .dropdown-content label {
+           display: flex;
+           align-items: center;
+           margin-bottom: 8px;
+       }
+
+       .dropdown-content input[type="checkbox"] {
+        margin-right: 8px; /* Space between checkbox and label text */
+        }
+
+       #hotOffersSection {
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+
+        #hotOffersSection::-webkit-scrollbar {
+            display: none;
+        }
+
+        #prevButton,
+        #nextButton {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #prevButton:hover,
+        #nextButton:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .wraper-new-bg {
+            background-image: url("../static/pics/cover.jpeg");
+            width: 100%;
+            background-size: cover;
+            height: 600px;
+            background-position: center;
+        }
+
+
+/* Footer container */
+.footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+}
+
+/* Footer elements (navigation links, etc.) */
+.footer .footer-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.footer .footer-content div {
+    margin: 10px;
+}
+
+/* For smaller screens, stack footer content vertically */
+@media (max-width: 768px) {
+    .footer .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Social media icons */
+    .footer .social-media {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .footer .social-media a {
+        margin: 0 10px;
+        display: inline-block;
+    }
+}
+
+/* Social media styling */
+.social-media a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.social-media a:hover {
+    color: #ffcc00; /* Highlight effect */
+}
+

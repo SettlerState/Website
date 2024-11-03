@@ -3,155 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listing Detail</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <meta name="description" content="Listing details page for Settler">
+    <meta name="keywords" content="real estate, property, buy, sell, rent, settler">
+    <meta property="og:title" content="Settler | დეტალები">
+    <meta property="og:description" content="View the details of this property listing on Settler.">
+    <meta property="og:image" content="{{ url_for('static', filename='pics/listing_thumbnail.png') }}">
+    <title>Settler | დეტალები</title>
+    <!-- Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
     <style>
+        /* Attribute Styling */
         .attribute {
             display: flex;
             flex-direction: column;
             align-items: center;
             color: #333;
             margin-right: 16px;
-            font-size: 1rem; /* Adjusted font size */
+            font-size: 1rem;
         }
         .attribute .value {
-            font-size: 1.9rem; /* Adjusted font size for the numbers */
-            color: #333; /* Darker gray for numbers */
-            margin-bottom: 0; /* Remove bottom margin */
+            font-size: 1.9rem;
+            color: #333;
+            margin-bottom: 0;
         }
         .attribute .label {
-            color: #777; /* Lighter gray for the labels */
-            font-weight: normal; /* Normal weight for labels */
-            margin-top: -10px; /* Decrease the space between the number and label */
-            font-size: 1rem; /* Adjusted font size for labels */
+            color: #777;
+            margin-top: -5px;
+            font-size: 0.9rem;
         }
-        .swiper-container {
-            width: 100%;
-            height: 400px; /* Adjust the height as needed */
-            margin-bottom: 20px;
-            overflow: hidden; /* Ensure no overflow */
-        }
-        .swiper-slide {
-            text-align: center;
-            background: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .swiper-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain; /* Make sure the entire image is visible */
-            border-radius: 8px;
-        }
+
+        /* Header Section */
         .header-section {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-start;
-            margin-top: 20px; /* Adjust this margin as needed */
+            margin-top: 20px;
         }
         .header-section div {
-            flex: 1;
+            margin-bottom: 16px;
         }
         .attributes-section {
             display: flex;
-            flex-direction: row; /* Align items horizontally */
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: flex-end; /* Align to the right */
+            justify-content: flex-start;
+        }
+        .attributes-section .attribute {
+            margin-right: 24px;
+            margin-bottom: 16px;
+        }
+
+        /* Call to Action Button Styling */
+        .cta-button {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            background-color: #2563eb;
+        }
+
+        /* Responsive Styling for Smaller Screens */
+        @media (max-width: 768px) {
+            .swiper-container {
+                height: 250px; /* Smaller height for mobile */
+            }
+            .header-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .attributes-section {
+                justify-content: flex-start;
+            }
+            .attribute {
+                margin-right: 16px;
+                margin-bottom: 12px;
+            }
+            .description {
+                margin-top: 10px;
+            }
+            .swiper-pagination {
+                bottom: 20px !important;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .swiper-container {
+                height: 500px; /* Larger height for desktop */
+                min-height: 500px;
+            }
+            .swiper-slide {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+            }
+            .swiper-slide img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+                max-height: 500px;
+                border-radius: 8px;
+            }
+            .swiper-pagination {
+                bottom: 10px !important;
+                z-index: 15;
+            }
+            .description {
+                margin-top: 20px;
+            }
+        }
+
+        /* Swiper Wrapper Styling */
+        .swiper-wrapper {
+            width: 100%;
+            height: auto;
+            padding-bottom: 64px !important;
+            transition-timing-function: linear !important;
+            position: relative;
+            z-index: auto !important;
+        }
+
+        /* Swiper Pagination Bullets */
+        .swiper-pagination-bullet {
+            background: #ffffff;
+        }
+
+        /* Custom Navigation Buttons Styling */
+        .custom-swiper-button {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 2px solid #4f46e5;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.3s;
+            cursor: pointer;
+            z-index: 20;
+            position: relative;
+        }
+
+        .custom-swiper-button:hover {
+            background-color: #4f46e5;
+            transform: scale(1.1);
+        }
+
+        .custom-swiper-button svg {
+            transition: color 0.3s;
+        }
+
+        .custom-swiper-button:hover svg {
+            color: white;
+        }
+
+        /* Description Styling */
+        .description {
+            white-space: normal; /* Allows text to wrap to the next line */
+            word-wrap: break-word; /* Breaks long words onto the next line */
+            line-height: 1.6; /* Increases line spacing for readability */
+            color: #4a5568;
+            margin-bottom: 1rem;
+            margin-top: 1rem;
         }
     </style>
+
 </head>
 <body class="bg-gray-100">
-    <div class="container mx-auto p-4">
-        <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="container mx-auto p-4 max-w-5xl"> <!-- Increased max-width from 4xl to 5xl -->
+        <article class="bg-white p-6 rounded-lg shadow-md w-full">
             <!-- Image Gallery Section -->
-            <div class="swiper-container">
-                <div class="swiper-wrapper">
-                    {% for image_url in listing.image_urls %}
-                    <div class="swiper-slide">
-                        <img src="{{ image_url }}" alt="Image of the listing">
+            <div class="w-full relative">
+                <div class="swiper default-carousel swiper-container">
+                    <div class="swiper-wrapper">
+                        {% for image_url in listing.image_urls %}
+                        <div class="swiper-slide">
+                            <img src="{{ image_url }}" alt="Image of the listing" loading="lazy">
+                        </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
+
+                    <!-- Custom Navigation Buttons -->
+                    <div class="absolute top-1/2 left-4 right-4 flex justify-between items-center transform -translate-y-1/2">
+                        <button id="custom-button-prev" class="custom-swiper-button" aria-label="Previous slide">
+                            <!-- Left Arrow SVG -->
+                            <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <button id="custom-button-next" class="custom-swiper-button" aria-label="Next slide">
+                            <!-- Right Arrow SVG -->
+                            <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Swiper Pagination -->
+                    <div class="swiper-pagination"></div>
                 </div>
-                <!-- Add Pagination -->
-                <div class="swiper-pagination"></div>
-                <!-- Add Navigation -->
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
             </div>
+
             <!-- Header Section -->
-            <div class="header-section">
+            <header class="header-section">
                 <div>
-                    <h1 class="text-3xl font-bold mb-2">${{ listing.price }}</h1>
+                    <h1 class="text-3xl md:text-2xl font-bold mb-2">
+                        {% if listing.discounted_price != listing.original_price and listing.original_price %}
+                            <span class="text-sm text-gray-500 line-through">${{ listing.original_price }}</span>
+                        {% endif %}
+                        <strong class="text-3xl text-black">${{ listing.discounted_price }}</strong>
+                    </h1>
                     <p class="text-gray-600">{{ listing.district }}</p>
                     <p class="text-gray-600">{{ listing.build_period }}</p>
                 </div>
+
                 <!-- Attributes Section -->
                 <div class="attributes-section">
                     <div class="attribute">
                         <span class="value">{{ listing.bedrooms }}</span>
                         <span class="label">საძინებელი</span>
                     </div>
-                    <div class="attribute">
-                        <span class="value">{{ listing.bathrooms }}</span>
-                        <span class="label">სველი წერტილი</span>
-                    </div>
-                    <div class="attribute">
-                        <span class="value">{{ listing.area }}</span>
-                        <span class="label">კვ.მ</span>
-                    </div>
+
+                <div class="attribute">
+                    <span class="value">{{ listing.bathrooms }}</span>
+                    <span class="label">სველი წერტილი</span>
+                </div>
+                <div class="attribute">
+                    <span class="value">{{ listing.area }}</span>
+                    <span class="label">კვ.მ</span>
                 </div>
             </div>
-            <p class="description text-gray-700 mb-4 mt-4">{{ listing.description }}</p>
-            <div class="mt-4">
-                <button class="bg-blue-500 text-white px-4 py-2 rounded">ვიზიტის დაჯავშნა</button>
+        </header>
+
+
+
+            <!-- Description -->
+            <p class="description">{{ listing.description }}</p>
+
+            <!-- Call to Action -->
+            <div class="mt-8 mb-2">
+                <a href="tel:+995555121150" title="დარეკვა" class="cta-button">+995 555 121 150</a>
             </div>
-        </div>
-        <a href="/" class="text-blue-500 mt-4 inline-block">უკან დაბრუნება</a>
+        </article>
+
+        <!-- Back to Listings -->
+        <footer>
+            <a href="/" class="mt-8 back">უკან დაბრუნება</a>
+        </footer>
     </div>
+
+    <!-- Swiper JS -->
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
-        var swiper = new Swiper('.swiper-container', {
-            slidesPerView: 1,
-            spaceBetween: 0,
-            centeredSlides: true,
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
+        var swiper = new Swiper(".default-carousel", {
+            loop: true,
             pagination: {
-                el: '.swiper-pagination',
+                el: ".swiper-pagination",
                 clickable: true,
             },
-            on: {
-                init: function() {
-                    console.log('Swiper initialized');
-                    const container = document.querySelector('.swiper-container');
-                    const wrapper = document.querySelector('.swiper-wrapper');
-                    const slides = document.querySelectorAll('.swiper-slide');
-
-                    function logElementDetails(element, elementName) {
-                        const rect = element.getBoundingClientRect();
-                        console.log(`${elementName} size:`, rect.width, rect.height);
-                        console.log(`${elementName} styles:`, window.getComputedStyle(element));
-                    }
-
-                    logElementDetails(container, 'Container');
-                    logElementDetails(wrapper, 'Wrapper');
-                    slides.forEach((slide, index) => {
-                        logElementDetails(slide, `Slide ${index + 1}`);
-                    });
-
-                    window.addEventListener('load', () => {
-                        console.log('Page fully loaded');
-                        logElementDetails(container, 'Container (on load)');
-                        logElementDetails(wrapper, 'Wrapper (on load)');
-                        slides.forEach((slide, index) => {
-                            logElementDetails(slide, `Slide ${index + 1} (on load)`);
-                        });
-                    });
-                },
+            navigation: {
+                nextEl: "#custom-button-next", // Point to custom next button
+                prevEl: "#custom-button-prev", // Point to custom prev button
             },
         });
     </script>
