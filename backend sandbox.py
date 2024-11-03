@@ -18,10 +18,8 @@ scope = [
 
 # Initialize Flask app
 app = Flask(__name__)
-
 with open('config.json') as config_file:
     config = json.load(config_file)
-
 creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
 
 
@@ -29,7 +27,6 @@ def initialize_sheets():
     """Initialize Google Sheets API and return worksheets."""
     filtered_worksheet = None
     complete_worksheet = None
-
     if not os.path.exists(creds_path):
         logger.error("The creds.json file does not exist at the specified path")
     else:
@@ -40,7 +37,6 @@ def initialize_sheets():
             complete_worksheet = client.open("Owners may sandbox").worksheet("owner listings")
         except Exception as e:
             logger.error(f"An error occurred: {e}")
-
     return filtered_worksheet, complete_worksheet
 
 
@@ -61,55 +57,113 @@ def get_links(worksheet):
     return links
 
 
+def normalize_link(link):
+    """Normalize links by extracting the part after 'ss.ge'."""
+    match = re.search(r'ss.ge/(.*)', link)
+    normalized = match.group(1) if match else link
+    logger.debug(f"Normalized link: {normalized}")
+    return normalized
+
+
+def normalize_price(price_str):
+    """Normalize the price string by removing currency symbols and formatting."""
+    try:
+        return float(price_str.replace('$', '').replace(' ', '').replace(',', ''))
+    except ValueError:
+        logger.error(f"Invalid price format: {price_str}")
+        return None
+
+
 def extract_attributes(complete_worksheet, filtered_worksheet, links):
-    """Extract attributes for the given links."""
     listings = []
     if complete_worksheet is None or filtered_worksheet is None:
         logger.error("Worksheets are not initialized.")
         return listings
+
     complete_rows = complete_worksheet.get_all_values()
     filtered_rows = filtered_worksheet.get_all_values()
 
-    descriptions = {normalize_link(row[0]): row[1] for row in filtered_rows}
-    prices = {normalize_link(row[0]): row[5] for row in filtered_rows}
+    description_col = 1
+    discounted_price_col = 3
+    original_price_col = 2
+
+    descriptions = {normalize_link(row[0]): row[description_col] for row in filtered_rows}
+    discounted_prices = {normalize_link(row[0]): row[discounted_price_col] for row in filtered_rows}
+    original_prices = {normalize_link(row[4]): row[original_price_col] for row in complete_rows}
 
     for link in links:
         found = False
         for row in complete_rows:
             normalized_row_link = normalize_link(row[4])
             if normalized_row_link == link:
-                description = descriptions.get(link, '')
-                price = prices.get(link, '')
-                if not price:
-                    price = row[2]
-                listing_id = re.search(r'\d+$', link).group()
+                description = descriptions.get(link, 'Description not available')
+                discounted_price = discounted_prices.get(link, 'Price not available')
+                original_price = original_prices.get(link, 'Original price not available')
+
+                # Normalize prices
+                normalized_discounted_price = normalize_price(discounted_price)
+                normalized_original_price = normalize_price(original_price)
+
+                # Calculate the discount amount
+                discount_amount = None
+                if normalized_discounted_price and normalized_original_price:
+                    discount_amount = normalized_original_price - normalized_discounted_price if normalized_original_price > normalized_discounted_price else None
+
+                # Handle price comparison and formatting
+                if normalized_discounted_price is None or normalized_discounted_price == normalized_original_price:
+                    show_price = f"{normalized_original_price:,.0f}" if normalized_original_price else 'ფასი შეთანხმებით'
+                    original_price_str = ""  # Hide original if no discount
+                else:
+                    show_price = f"{normalized_discounted_price:,.0f}" if normalized_discounted_price else 'Price not available'
+                    original_price_str = f"{normalized_original_price:,.0f}" if normalized_original_price else ""
+
+                if isinstance(original_price_str, str) and original_price_str.endswith('.0'):
+                    original_price_str = original_price_str[:-2]
+                if isinstance(show_price, str) and show_price.endswith('.0'):
+                    show_price = show_price[:-2]
+
+                discount_str = f"{discount_amount:,.0f}" if discount_amount and discount_amount > 0 else ""
+
+                listing_id_match = re.search(r'\d+$', link)
+                if not listing_id_match:
+                    logger.error(f"Invalid link format, cannot extract listing ID: {link}")
+                    continue
+
+                listing_id = listing_id_match.group()
+
                 base_path = "static/images"
                 image_folder = os.path.join(base_path, listing_id)
-                logger.info(f"Base directory: {os.path.abspath(base_path)}")
-                logger.info(f"Listing ID: {listing_id}")
-                logger.info(f"Constructed image folder path: {os.path.abspath(image_folder)}")
-
                 images = os.listdir(image_folder) if os.path.exists(image_folder) else []
-                image_filename = images[0] if images else 'no_image_available.jpg'
+                image_filenames = [os.path.join(f'images/{listing_id}', image).replace('\\', '/') for image in images]
+                if not images:
+                    image_filenames = ['images/no_image_available.jpg']
+
+                thumbnail_url = image_filenames[0] if image_filenames else 'images/no_image_available.jpg'
+
                 listing = {
                     "link": link,
-                    "district": row[0],
+                    "district": row[0] if len(row) > 0 else '',
                     "description": description,
-                    "bedrooms": row[1],
-                    "price": price,
-                    "area": row[3],
-                    "image_filename": image_filename,
-                    "bathrooms": row[6],
-                    "renovation": row[7],
-                    "build_period": row[8],
+                    "bedrooms": row[1] if len(row) > 1 else '0',
+                    "original_price": original_price_str,
+                    "discounted_price": show_price,
+                    "discount_amount": discount_str,
+                    "area": row[3] if len(row) > 3 else '0',
+                    "image_urls": [url_for('static', filename=image) for image in image_filenames],
+                    "thumbnail_url": url_for('static', filename=thumbnail_url),
+                    "bathrooms": row[6] if len(row) > 6 else '0',
+                    "renovation": row[7] if len(row) > 7 else 'N/A',
+                    "build_period": row[8] if len(row) > 8 else 'N/A',
                     "listing_id": listing_id,
                 }
-                logger.info(f"Matched listing: {listing}")
+
                 listings.append(listing)
                 found = True
                 break
+
         if not found:
             logger.warning(f"No match found for link: {link}")
+
     return listings
 
 
@@ -132,11 +186,12 @@ def initialize_listings():
         # If listings are already initialized, don't reload them
         return
 
-    filtered_worksheet, complete_worksheet = initialize_sheets()
+    filtered_worksheet, complete_worksheet = initialize_sheets()  # Expect 3 values now
+
     if filtered_worksheet and complete_worksheet:
         filtered_links = get_links(filtered_worksheet)
         logger.info(f"Filtered links: {filtered_links}")
-        listings = extract_attributes(complete_worksheet, filtered_worksheet, filtered_links)
+        listings.extend(extract_attributes(complete_worksheet, filtered_worksheet, filtered_links))
         logger.info(f"Extracted listings: {listings}")
     else:
         listings = []
@@ -149,9 +204,9 @@ def filter_listings(listings, area=None, price_min=None, price_max=None, bedroom
     selected_districts = district if isinstance(district, list) else [district] if district else []
 
     for listing in listings:
-        listing['image_url'] = url_for('static',
-                                       filename=f'images/{listing["listing_id"]}/{listing.get("image_filename", "no_image_available.jpg")}')
-        listing_price = parse_price(listing['price'])
+        listing['image_url'] = listing['image_urls'][0] if listing.get("image_urls") else url_for('static',
+                                                                                                  filename='images/no_image_available.jpg')
+        listing_price = parse_price(listing['discounted_price'])
         min_price = parse_price(price_min) if price_min else None
         max_price = parse_price(price_max) if price_max else None
 
@@ -176,24 +231,26 @@ def filter_listings(listings, area=None, price_min=None, price_max=None, bedroom
     return filtered_listings
 
 
-@app.route('/test')
-def index():
-    """Render the index page without filters.doesnt contain filters"""
-    global listings
-    if not listings:
-        initialize_listings()
-    for listing in listings:
-        listing['image_url'] = url_for('static',
-                                       filename=f'images/{listing["listing_id"]}/{listing.get("image_filename", "no_image_available.jpg")}')
-    return render_template('index.html', listings=listings)
-
-
 def parse_price(price_str):
     """Remove commas, spaces, and convert to float."""
     try:
         return float(price_str.replace(',', '').replace('$', '').replace(' ', ''))
     except ValueError:
         return float('inf')
+
+
+@app.route('/test')
+def test_index():
+    """Render the index page without filters. Doesn't contain filters."""
+    global listings
+    if not listings:
+        initialize_listings()
+    for listing in listings:
+        listing['image_urls'] = [url_for('static', filename=f'images/{listing["listing_id"]}/{img}') for img in
+                                 os.listdir(os.path.join('static', 'images', listing['listing_id']))] if os.path.exists(
+            os.path.join('static', 'images', listing['listing_id'])) else [
+            url_for('static', filename='images/no_image_available.jpg')]
+    return render_template('index.html', listings=listings)
 
 
 @app.route('/', methods=['GET'])
@@ -207,7 +264,7 @@ def landing():
     price_min = request.args.get('price_min')
     price_max = request.args.get('price_max')
     bedrooms = request.args.get('bedrooms')
-    districts = request.args.getlist('district')  # Use getlist to capture all selected districts
+    districts = request.args.getlist('district')
 
     distinct_districts = sorted(set(listing['district'] for listing in listings if listing['district'].strip()))
 
@@ -216,16 +273,14 @@ def landing():
     filters_applied = any([area, price_min, price_max, bedrooms, districts])
 
     if not filters_applied:
-        hot_offers = sorted(listings, key=lambda x: parse_price(x['price']), reverse=True)[:9]
-        for listing in hot_offers:
-            listing['image_url'] = url_for('static',
-                                           filename=f'images/{listing["listing_id"]}/{listing.get("image_filename", "no_image_available.jpg")}')
+        # Filter to get only discounted listings
+        discounted_listings = [listing for listing in listings
+                               if
+                               listing['original_price'] and listing['discounted_price'] != listing['original_price']]
+        # Sort by discounted price
+        hot_offers = sorted(discounted_listings, key=lambda x: parse_price(x['discounted_price']), reverse=True)[:9]
         return render_template('landing page with filter.html', listings=hot_offers, districts=distinct_districts,
                                show_hot_offers=True)
-
-    for listing in filtered_listings:
-        listing['image_url'] = url_for('static',
-                                       filename=f'images/{listing["listing_id"]}/{listing.get("image_filename", "no_image_available.jpg")}')
 
     return render_template('landing page with filter.html', listings=filtered_listings, districts=distinct_districts,
                            show_hot_offers=False)
@@ -234,15 +289,14 @@ def landing():
 @app.route('/listing/<listing_id>')
 def listing_detail(listing_id):
     """Render the detail page for a specific listing."""
-    if 'listings' not in globals():
+    if not listings:
         initialize_listings()
     listing = next((item for item in listings if item["listing_id"] == listing_id), None)
     if listing:
-        if listing['image_filename']:
-            listing['image_url'] = url_for('static',
-                                           filename=f'images/{listing["listing_id"]}/{listing["image_filename"]}')
-        else:
-            listing['image_url'] = url_for('static', filename='images/no_image_available.jpg')
+        logger.debug(f"Listing data: {listing}")  # Debugging line
+        # Ensure 'image_urls' exists and is a list
+        if 'image_urls' not in listing or not listing['image_urls']:
+            listing['image_urls'] = [url_for('static', filename='images/no_image_available.jpg')]
         return render_template('listing_detail.html', listing=listing)
     else:
         return "Listing not found", 404
