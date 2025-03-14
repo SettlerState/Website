@@ -82,6 +82,7 @@
            background-color: #f0f0f0;
        }
 
+
        .popover {
            background-color: #ffffff;
            border-radius: 0.375rem;
@@ -175,6 +176,70 @@
     }
 }
 
+/* Location popover styles */
+.location-popover {
+    background-color: #ffffff;
+    border-radius: 0.375rem;
+    z-index: 20;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem; /* Consistent padding with other popovers */
+    max-width: 300px; /* Set a max width similar to other popovers */
+    min-width: 200px; /* Ensure it is wide enough for content */
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth open and close transitions */
+    opacity: 0;
+    transform: scale(0.9);
+    transform-origin: top center;
+    display: none; /* Hide by default */
+}
+
+.location-popover {
+    display: none;
+    position: absolute;
+    top: 100%; /* Adjust for dropdown position */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    padding: 10px;
+    border-radius: 4px;
+    max-height: 300px; /* Limit the height for scrolling */
+    overflow-y: auto;
+}
+
+.location-popover.show {
+    display: block;
+}
+
+
+/* Checkbox Styles */
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+}
+
+.checkbox-custom:checked {
+    background-color: #078bf7;
+    border-color: #078bf7;
+}
+
+/* Label Styling */
+label {
+    font-size: 0.875rem;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .location-popover {
+        width: 90vw;
+        left: 5%;
+        top: 110%;
+    }
+}
+
 
 
        #header-spacing {
@@ -251,9 +316,27 @@
            position: relative;
        }
 
+       /* Ensure scrollbar is always visible on mobile */
+        #dropdownSearch ul {
+            overflow-y: auto; /* Enables vertical scrolling */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling for mobile */
+        }
+
+        #dropdownSearch ul::-webkit-scrollbar {
+            width: 6px; /* Set the scrollbar width */
+        }
+
+        #dropdownSearch ul::-webkit-scrollbar-thumb {
+            background-color: #d4d4d4; /* Scrollbar color */
+            border-radius: 3px; /* Rounded scrollbar */
+        }
+
+        #dropdownSearch ul::-webkit-scrollbar-track {
+            background: #f5f5f5; /* Scrollbar track color */
+        }
 
 
-       #locationButton:hover, #bedroomButton:hover, #priceButton:hover {
+       #dropdownSearchButton:hover, #bedroomButton:hover, #priceButton:hover {
            background-color: #B0B7C0;
            color: white;
        }
@@ -372,3 +455,8 @@
     color: #ffcc00; /* Highlight effect */
 }
 
+.pagination .ellipsis {
+    padding: 5px 10px;
+    color: #888;
+    cursor: default;
+}

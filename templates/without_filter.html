@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Settler რეალტორის ოფისი - საუკეთესო ფასად ბინების ყიდვა, გაყიდვა და გაქირავება.">
+    <meta name="keywords" content="ბინები, უძრავი ქონება, ყიდვა, გაყიდვა, გაქირავება, Settler">
+    <meta property="og:title" content="Settler | ბინები საუკეთესო ფასად">
+    <meta property="og:description" content="ბინების სიახლეები გაყიდვის, ყიდვის და გაქირავების შესახებ საუკეთესო ფასად.">
+    <meta property="og:image" content="{{ url_for('static', filename='pics/listing_thumbnail.png') }}">
+    <meta property="og:url" content="https://www.settler.ge/">
+    <meta property="og:type" content="website">
+    <title>Settler | ბინები საუკეთესო ფასად</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
+</head>
+<body class="bg-gray-100">
+
+    <!-- Header -->
+    <header class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 relative">
+            <div class="flex justify-center items-center text-gray-800 text-xl">
+                <div class="flex-1 flex justify-start">
+                    <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300 hidden md:inline">კონტაქტი</a>
+                </div>
+                <a href="{{ url_for('without_filter') }}" class="flex items-center">
+                    <img src="{{ url_for('static', filename='pics/settler logo .png') }}" alt="Logo" style="height: 70px; width: auto;">
+                </a>
+                <div class="flex-1 flex justify-end">
+                    <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300 hidden md:inline">ბლოგი</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full">
+
+        <!-- Hero Section -->
+        <section class="relative w-full bg-gray-300 md:h-screen lg:h-[500px]"
+                 style="background-image: url('{{ url_for('static', filename='pics/cover.jpeg') }}');
+                        background-size: cover;
+                        background-position: center;">
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+            <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8">
+                <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 text-center">
+                    აღმოაჩინე ბინები <br> საუკეთესო ფასად
+                </h1>
+            </div>
+        </section>
+
+        <!-- "ნაპოვნი ბინები" Section -->
+        <section class="py-8 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl font-bold mb-4">ნაპოვნი ბინები</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {% for listing in listings %}
+                    <div class="bg-white rounded-lg shadow-md p-4">
+                        <a href="{{ url_for('listing_detail', listing_id=listing.listing_id) }}">
+                            <img src="{{ listing.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
+                                 class="w-full h-48 object-cover rounded-t-lg mb-4" alt="Listing Image">
+                        </a>
+                        <div class="text-lg font-semibold mb-2 flex items-center">
+                                <!-- Price Section -->
+                                <div class="inline-flex items-baseline space-x-2">
+                                    <!-- Original Price (Crossed out, smaller, paler) -->
+                                    {% if listing.discounted_price != listing.original_price and listing.original_price %}
+                                        <span class="text-sm text-gray-500 line-through pr-2">${{ listing.original_price }}</span>
+                                    {% endif %}
+                                    <!-- Discounted Price (Bold, prominent) -->
+                                    {% if listing.discounted_price and listing.discounted_price != listing.original_price %}
+                                        <span class="text-2xl font-bold text-red-600">${{ listing.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="text-2xl text-black pr-2">${{ listing.original_price }}</span>
+                                    {% endif %}
+
+                                </div>
+                                <!-- Discount Amount (Green, aligned towards the right) -->
+                                {% if listing.discount_amount %}
+                                    <span class="text-green-600 text-sm ml-auto pr-7">დანაზოგი: -{{ listing.discount_amount }}$</span>
+                                {% endif %}
+                            </div>
+                            <div class="listing-info mb-4">
+                                <span>{{ listing.district }}</span>
+                                <span><span class="bold">{{ listing.bedrooms }}</span> საძინებელი</span>
+                                <span><span class="bold">{{ listing.bathrooms }}</span> აბაზანა</span>
+                                <span><span class="bold">{{ listing.area }}</span> მ²</span>
+                            </div>
+                            <div class="description">{{ listing.description }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="text-center">© 2024 Settler State</p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Toggle mobile menu visibility
+        const burger = document.getElementById('burger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenu = document.getElementById('close-menu'); // New close button
+
+        if (burger && mobileMenu) {
+            burger.addEventListener('click', function () {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            closeMenu?.addEventListener('click', function () {
+                mobileMenu.classList.add('hidden');
+            });
+        }
+
+        // Dropdown and Popover toggling
+        const locationButton = document.getElementById('dropdownSearchButton');
+        const locationDropdown = document.getElementById('dropdownSearch');
+        const locationLabel = locationButton.querySelector('span'); // Location button label (to update text)
+
+        const priceButton = document.getElementById('priceButton');
+        const pricePopover = document.getElementById('pricePopover');
+
+        const bedroomButton = document.getElementById('bedroomButton');
+        const bedroomPopover = document.getElementById('bedroomPopover');
+
+        let selectedLocations = [];
+
+        if (locationButton && locationDropdown) {
+            locationButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                locationDropdown.classList.toggle('hidden');
+                pricePopover?.classList.add('hidden');
+                bedroomPopover?.classList.add('hidden');
+            });
+
+            // Track selected locations
+            const locationCheckboxes = locationDropdown.querySelectorAll('input[type="checkbox"]');
+            locationCheckboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                    if (checkbox.checked) {
+                        selectedLocations.push(checkbox.value);
+                    } else {
+                        const index = selectedLocations.indexOf(checkbox.value);
+                        if (index > -1) {
+                            selectedLocations.splice(index, 1);
+                        }
+                    }
+                });
+            });
+
+            // Close location dropdown and update button text when "Apply" (არჩევა) is clicked
+            const applyLocationButton = locationDropdown.querySelector('button[type="button"]');
+            applyLocationButton?.addEventListener('click', function () {
+                locationDropdown.classList.add('hidden');
+                // Update the button text with the selected locations
+                if (selectedLocations.length > 0) {
+                    locationLabel.textContent = selectedLocations.join(', '); // Display selected locations
+                } else {
+                    locationLabel.textContent = 'მდებარეობა'; // Default text when no location is selected
+                }
+            });
+        }
+
+        if (priceButton && pricePopover) {
+            priceButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                pricePopover.classList.toggle('hidden');
+                locationDropdown?.classList.add('hidden');
+                bedroomPopover?.classList.add('hidden');
+            });
+        }
+
+        if (bedroomButton && bedroomPopover) {
+            bedroomButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                bedroomPopover.classList.toggle('hidden');
+                locationDropdown?.classList.add('hidden');
+                pricePopover?.classList.add('hidden');
+            });
+        }
+
+        // Close all dropdowns/popovers when clicking outside
+        document.addEventListener('click', function () {
+            locationDropdown?.classList.add('hidden');
+            pricePopover?.classList.add('hidden');
+            bedroomPopover?.classList.add('hidden');
+        });
+
+        // Prevent closing dropdowns/popovers when clicking inside
+        locationDropdown?.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        pricePopover?.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        bedroomPopover?.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+
+        // Handle bedroom selection
+        const applyBedroomButton = document.getElementById('applyBedroomButton');
+        const bedroomInput = document.getElementById('bedroomInput');
+        const bedroomOptions = document.querySelectorAll('.popover-button');
+
+        let selectedBedroom = "";
+
+        bedroomOptions.forEach(function (option) {
+            option.addEventListener('click', function () {
+                bedroomOptions.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
+                option.classList.add('bg-blue-500', 'text-white');
+                selectedBedroom = option.textContent.trim();
+                bedroomInput.value = selectedBedroom.includes('+') ? selectedBedroom.slice(0, -1) : selectedBedroom;
+            });
+        });
+
+        applyBedroomButton?.addEventListener('click', function () {
+            if (selectedBedroom) {
+                bedroomPopover.classList.add('hidden');
+                document.getElementById('searchForm').submit();
+            } else {
+                alert("Please select a bedroom option.");
+            }
+        });
+
+        // Handle price range selection
+        const applyPriceButton = document.getElementById('applyPriceButton');
+        const priceInputMin = document.getElementById('min-price');
+        const priceInputMax = document.getElementById('max-price');
+
+        applyPriceButton?.addEventListener('click', function () {
+            const minPrice = parseInt(priceInputMin.value, 10);
+            const maxPrice = parseInt(priceInputMax.value, 10);
+
+            if (!isNaN(minPrice) && !isNaN(maxPrice) && minPrice <= maxPrice) {
+                document.getElementById('searchForm').submit();
+            } else {
+                alert("Ensure valid price values and that minimum is less than or equal to maximum.");
+            }
+        });
+
+        // Horizontal scroll for hot offers
+        document.getElementById('nextButton')?.addEventListener('click', function () {
+            document.getElementById('hotOffersSection').scrollBy({
+                left: 300,
+                behavior: 'smooth',
+            });
+        });
+
+        document.getElementById('prevButton')?.addEventListener('click', function () {
+            document.getElementById('hotOffersSection').scrollBy({
+                left: -300,
+                behavior: 'smooth',
+            });
+        });
+    });
+</script>
+
+
+
+
+
+</body>
+</html>
+
+

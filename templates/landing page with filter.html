@@ -19,11 +19,9 @@
 </head>
 <body class="bg-gray-100">
 
-   <!-- Header -->
     <header class="bg-white">
-        <div class="max-w-7xl mx-auto px-4 relative"> <!-- Add relative positioning to parent -->
+        <div class="max-w-7xl mx-auto px-4 relative">
             <div class="flex justify-center items-center text-gray-800 text-xl" id="header-spacing">
-                <!-- Left side for mobile: 'კონტაქტი' -->
                 <div class="flex-1 flex justify-start">
                     <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300 hidden md:inline">კონტაქტი</a>
                 </div>
@@ -33,7 +31,6 @@
                     <img src="{{ url_for('static', filename='pics/settler logo .png') }}" alt="Logo" style="height: 70px; width: auto;">
                 </a>
 
-                <!-- Right side for mobile: 'ბლოგი' and burger menu -->
                 <div class="flex-1 flex justify-end">
                     <div class="hidden md:flex items-center space-x-1">
                         <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300">ბლოგი</a>
@@ -48,7 +45,7 @@
                 </div>
             </div>
 
-            <!-- Mobile menu (hidden by default) -->
+            <!-- Mobile menu (hidden) -->
             <div id="mobile-menu" class="hidden flex-col space-y-1 md:hidden mt-2">
                 <button id="close-menu" class="self-end p-2">✖️</button> <!-- Close button -->
                 <a href="{{ url_for('blog') }}" class="block py-2 px-4 hover:text-gray-300">კონტაქტი</a>
@@ -59,15 +56,12 @@
 
 
 
-   <!-- Main Content -->
    <main class="w-full">
-
         <!-- Hero Section -->
         <section class="relative w-full bg-gray-300 md:h-screen lg:h-[500px]"
                  style="background-image: url('{{ url_for('static', filename='pics/cover.jpeg') }}');
                         background-size: cover;
                         background-position: center;">
-            <!-- Overlay for better text visibility -->
             <div class="absolute inset-0 bg-black opacity-50"></div>
 
             <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8">
@@ -79,8 +73,9 @@
 
                     <!-- Location Filter Input -->
                     <div class="relative flex-1">
-                        <button id="locationButton" type="button"
-                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center">
+                        <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch"
+                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-900"
+                                type="button">
                             მდებარეობა
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -88,23 +83,38 @@
                                       stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div id="locationDropdown"
-                             class="absolute top-full left-0 w-full bg-white border border-gray-200 rounded-md mt-2 shadow-lg hidden z-20">
-                            <div class="p-2 max-h-60 overflow-y-auto">
+
+                        <!-- Dropdown menu -->
+                        <div id="dropdownSearch"
+                             class="hidden absolute top-full left-0 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                            <ul class="h-48 px-3 pb-3 overflow-y-auto text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownSearchButton">
                                 {% for district in districts %}
-                                <label class="block text-gray-700">
-                                    <input type="checkbox" name="district" value="{{ district }}" class="mr-2">
-                                    {{ district }}
-                                </label>
+                                <li>
+                                    <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        <input id="checkbox-{{ loop.index }}" type="checkbox" name="district" value="{{ district }}"
+                                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="checkbox-{{ loop.index }}" class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">
+                                            {{ district }}
+                                        </label>
+                                    </div>
+                                </li>
                                 {% endfor %}
+                            </ul>
+                            <div class="flex justify-center mt-2">
+                                <button type="button"
+                                        class="flex items-center justify-center p-3 mb-2 text-sm font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
+                                    არჩევა
+                                </button>
                             </div>
                         </div>
                     </div>
 
-                 <!-- Price Filter Button and Popover Container -->
+
+                    <!-- Price Filter -->
                     <div class="relative flex-1">
                         <button id="priceButton" type="button"
-                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center">
+                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-900">
                             ფასი
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -113,9 +123,7 @@
                             </svg>
                         </button>
                         <div class="hidden absolute top-full left-0 w-full md:w-96 bg-white border border-gray-200 rounded-md mt-2 shadow-lg z-20" id="pricePopover">
-                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">
-                                ფასის დიაპაზონი
-                            </div>
+                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">ფასის დიაპაზონი</div>
                             <div class="p-4">
                                 <div class="flex flex-col md:flex-row mb-4 space-y-2 md:space-y-0 md:space-x-2">
                                     <div class="flex-1">
@@ -130,32 +138,24 @@
                                     </div>
                                 </div>
                                 <div class="flex justify-center">
-                                    <button type="button"
-                                            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-                                            id="applyPriceButton">
-                                        არჩევა
-                                    </button>
+                                    <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600" id="applyPriceButton">არჩევა</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-
-                    <!-- Bedrooms Filter Button and Popover Container -->
+                    <!-- Bedrooms Filter -->
                     <div class="relative flex-1">
                         <button id="bedroomButton" type="button"
-                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center">
+                                class="w-full py-2 px-4 bg-gray-300 text-gray-800 rounded-md flex justify-between items-center focus:ring-4 focus:outline-none focus:ring-gray-300 dark:bg-gray-700 dark:hover:bg-gray-800 dark:focus:ring-gray-900">
                             საძინებლები
                             <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor"
                                  viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
                         <div class="hidden absolute top-full left-0 w-full md:w-96 bg-white border border-gray-200 rounded-md mt-2 shadow-lg z-20" id="bedroomPopover">
-                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">
-                                საძინებლების რაოდენობა
-                            </div>
+                            <div class="text-sm font-semibold text-gray-700 bg-gray-100 p-4">საძინებლების რაოდენობა</div>
                             <div class="p-4">
                                 <div class="flex flex-wrap gap-2">
                                     <button type="button" class="popover-button flex-1 py-2 px-4 bg-gray-200 rounded-md">სტუდიო</button>
@@ -166,11 +166,7 @@
                                     <button type="button" class="popover-button flex-1 py-2 px-4 bg-gray-200 rounded-md">5+</button>
                                 </div>
                                 <div class="flex justify-center mt-4">
-                                    <button type="button"
-                                            class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-                                            id="applyBedroomButton">
-                                        არჩევა
-                                    </button>
+                                    <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600" id="applyBedroomButton">არჩევა</button>
                                 </div>
                             </div>
                         </div>
@@ -178,19 +174,22 @@
 
                     <!-- Hidden Input for Bedrooms -->
                     <input type="hidden" name="bedrooms" id="bedroomInput" value="">
+                    <!-- Hidden Input to Track Filters Applied -->
+                    <input type="hidden" name="filters_applied" id="filtersApplied" value="false">
 
                     <!-- Search Button -->
                     <button type="submit"
-                            class="w-full md:w-auto bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600">
+                            class="w-full md:w-auto bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300">
                         ძიება
                     </button>
                 </form>
+
             </div>
         </section>
 
         <!-- Content Section: Hot Offers and Search Results -->
         <section class="py-8 px-4 sm:px-6 lg:px-8">
-            {% if show_hot_offers %}
+            {% if not filters_applied %}
                 <!-- Hot Offers Container -->
                 <div class="max-w-7xl mx-auto">
                     <h2 class="text-2xl font-bold mb-4">ფასდაკლებული ბინები</h2>
@@ -201,8 +200,8 @@
                             &#10094;
                         </button>
                         <div id="hotOffersSection" class="flex space-x-4 overflow-x-auto">
-                            {% for offer in listings %}
-                            <div class="bg-white rounded-lg shadow-md p-4 w-96 flex-none transition-transform duration-300 ease-in-out">
+                            {% for offer in hot_offers %}
+                            <div class="bg-white rounded-lg shadow-md p-4 w-96 flex-none transition-transform duration-300 ease-in-out relative">
                                 <a href="{{ url_for('listing_detail', listing_id=offer.listing_id) }}">
                                     <img src="{{ offer.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
                                          class="thumbnail mb-4" alt="Image of the listing">
@@ -210,18 +209,15 @@
                                 <div class="text-lg font-semibold mb-2 flex items-center">
                                     <!-- Price Section -->
                                     <div class="inline-flex items-baseline space-x-2">
-                                        <!-- Original Price (Crossed out, smaller, paler, color #888888) -->
                                         {% if offer.discounted_price != offer.original_price and offer.original_price %}
                                             <span class="text-sm text-gray-500 line-through pr-2">${{ offer.original_price }}</span>
                                         {% endif %}
-                                        <!-- Discounted Price (Bold, prominent, red if discounted) -->
                                         {% if offer.discounted_price != 'Price not available' %}
                                             <span class="text-2xl font-bold text-red-600">${{ offer.discounted_price }}</span>
                                         {% else %}
                                             <span class="text-2xl text-black pr-2">${{ offer.original_price }}</span>
                                         {% endif %}
                                     </div>
-                                    <!-- Discount Amount (Green, aligned towards the right) -->
                                     {% if offer.discount_amount %}
                                         <span class="text-green-600 text-sm ml-auto pr-7">დანაზოგი: -{{ offer.discount_amount }}$</span>
                                     {% endif %}
@@ -229,10 +225,17 @@
                                 <div class="listing-info mb-4">
                                     <span>{{ offer.district }}</span>
                                     <span><span class="bold">{{ offer.bedrooms }}</span> საძინებელი</span>
-                                    <span><span class="bold">{{ offer.bathrooms }}</span> აბაზანა</span>
+                                    <span><span class="bold">{{ offer.floors }}</span> სართული</span>
                                     <span><span class="bold">{{ offer.area }}</span> მ²</span>
                                 </div>
-                                <div class="description">{{ offer.description }}</div>
+
+                                <!-- ID in the bottom-left corner -->
+                                <div class="listing-id" style="position: absolute; bottom: 10px; left: 15px; font-size: 12px; color: #666;">
+                                    ID: {{ offer.listing_id }}
+                                </div>
+                                <div class="date-time" style="position: absolute; bottom: 10px; right: 15px;  font-size: 12px; color: #666;">
+                                    თარიღი: {{ offer.date_time }}
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -245,53 +248,99 @@
                 </div>
             {% endif %}
 
-            {% if not show_hot_offers %}
-
-            <!-- Search Results Section (List) -->
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-2xl font-bold mb-4">ნაპოვნი ბინები</h2>
-                <div id="searchResultsSection">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {% for listing in listings %}
-                        <div class="bg-white rounded-lg shadow-md p-4">
-                            <a href="{{ url_for('listing_detail', listing_id=listing.listing_id) }}">
-                                <img src="{{ listing.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
-                                     class="thumbnail mb-4" alt="Image of the listing">
-                            </a>
-                            <div class="text-lg font-semibold mb-2 flex items-center">
-                                <!-- Price Section -->
-                                <div class="inline-flex items-baseline space-x-2">
-                                    <!-- Original Price (Crossed out, smaller, paler) -->
-                                    {% if listing.discounted_price != listing.original_price and listing.original_price %}
-                                        <span class="text-sm text-gray-500 line-through pr-2">${{ listing.original_price }}</span>
+            {% if filters_applied and listings %}
+                <!-- Search Results Section (List) -->
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-4">ნაპოვნი ბინები</h2>
+                    <div id="searchResultsSection">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {% for listing in listings %}
+                            <div class="bg-white rounded-lg shadow-md p-4 relative">
+                                <a href="{{ url_for('listing_detail', listing_id=listing.listing_id) }}">
+                                    <img src="{{ listing.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
+                                         class="thumbnail mb-4" alt="Image of the listing">
+                                </a>
+                                <div class="text-lg font-semibold mb-2 flex items-center">
+                                    <!-- Price Section -->
+                                    <div class="inline-flex items-baseline space-x-2">
+                                        {% if listing.discounted_price != listing.original_price and listing.original_price %}
+                                            <span class="text-sm text-gray-500 line-through pr-2">${{ listing.original_price }}</span>
+                                        {% endif %}
+                                        {% if listing.discounted_price and listing.discounted_price != listing.original_price %}
+                                            <span class="text-2xl font-bold text-red-600">${{ listing.discounted_price }}</span>
+                                        {% else %}
+                                            <span class="text-2xl text-black pr-2">${{ listing.original_price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if listing.discount_amount %}
+                                        <span class="text-green-600 text-sm ml-auto pr-7">დანაზოგი: -{{ listing.discount_amount }}$</span>
                                     {% endif %}
-                                    <!-- Discounted Price (Bold, prominent) -->
-                                    {% if listing.discounted_price and listing.discounted_price != listing.original_price %}
-                                        <span class="text-2xl font-bold text-red-600">${{ listing.discounted_price }}</span>
-                                    {% else %}
-                                        <span class="text-2xl text-black pr-2">${{ listing.original_price }}</span>
-                                    {% endif %}
-
                                 </div>
-                                <!-- Discount Amount (Green, aligned towards the right) -->
-                                {% if listing.discount_amount %}
-                                    <span class="text-green-600 text-sm ml-auto pr-7">დანაზოგი: -{{ listing.discount_amount }}$</span>
-                                {% endif %}
+                                <div class="listing-info mb-4">
+                                    <span>{{ listing.district }}</span>
+                                    <span><span class="bold">{{ listing.bedrooms }}</span> საძინებელი</span>
+                                    <span><span class="bold">{{ listing.floors }}</span> სართული</span>
+                                    <span><span class="bold">{{ listing.area }}</span> მ²</span>
+                                </div>
+                                <!-- ID in the bottom-left corner -->
+                                <div class="listing-id" style="position: absolute; bottom: 10px; left: 15px; font-size: 12px; color: #666;">
+                                    ID: {{ listing.listing_id }}
+                                </div>
+                                <div class="date-time" style="position: absolute; bottom: 10px; right: 15px;  font-size: 12px; color: #666;">
+                                    თარიღი: {{ listing.date_time }}
+                                </div>
                             </div>
-                            <div class="listing-info mb-4">
-                                <span>{{ listing.district }}</span>
-                                <span><span class="bold">{{ listing.bedrooms }}</span> საძინებელი</span>
-                                <span><span class="bold">{{ listing.bathrooms }}</span> აბაზანა</span>
-                                <span><span class="bold">{{ listing.area }}</span> მ²</span>
-                            </div>
-                            <div class="description">{{ listing.description }}</div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
                     </div>
                 </div>
-            </div>
+
+                <div class="flex items-center justify-center border-t border-gray-200 bg-white px-4 py-3 sm:px-6 mt-12">
+                    <nav class="isolate inline-flex flex-wrap justify-center gap-1 max-w-full overflow-hidden overflow-x-auto rounded-md shadow-xs" aria-label="Pagination">
+                        {% set query_params = request.args.to_dict() %}
+
+                        <!-- Previous Button -->
+                        {% if pagination.has_prev %}
+                            {% set prev_params = query_params.copy() %}
+                            {% set _ = prev_params.update({'page': pagination.prev_page}) %}
+                            <a href="{{ url_for('landing', **prev_params) }}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100 sm:px-3">
+                                <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M11.78 5.22a.75.75 0 0 1 0 1.06L8.06 10l3.72 3.72a.75.75 0 1 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06l4.25-4.25a.75.75 0 0 1 1.06 0Z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="hidden sm:inline">Prev</span>
+                            </a>
+                        {% endif %}
+
+                        <!-- Page Numbers -->
+                        {% for page in pagination_range %}
+                            {% if page == '...' %}
+                                <span class="px-4 py-2 text-sm text-gray-500">...</span>
+                            {% else %}
+                                {% set page_params = query_params.copy() %}
+                                {% set _ = page_params.update({'page': page}) %}
+                                <a href="{{ url_for('landing', **page_params) }}" class="px-4 py-2 text-sm font-semibold rounded-full transition-all {% if page == pagination.current_page %}bg-indigo-600 text-white{% else %}text-gray-900 bg-white border border-gray-300 hover:bg-gray-100{% endif %}">
+                                    {{ page }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next Button -->
+                        {% if pagination.has_next %}
+                            {% set next_params = query_params.copy() %}
+                            {% set _ = next_params.update({'page': pagination.next_page}) %}
+                            <a href="{{ url_for('landing', **next_params) }}" class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full hover:bg-gray-100 sm:px-3">
+                                <span class="hidden sm:inline">Next</span>
+                                <svg class="w-5 h-5 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd"></path>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
             {% endif %}
         </section>
+
+
    </main>
 
    <!-- Footer -->
@@ -320,7 +369,6 @@
             </div>
             <!-- Social Media Icons -->
             <div class="mt-8 flex justify-center space-x-6">
-                <!-- Example Social Media Links -->
                 <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Facebook">
                     <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
                         <!-- Facebook Icon -->
@@ -343,143 +391,178 @@
         </div>
     </footer>
 
-
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
     // Toggle mobile menu visibility
     const burger = document.getElementById('burger');
     const mobileMenu = document.getElementById('mobile-menu');
-    const closeMenu = document.getElementById('close-menu'); // New close button
+    const closeMenu = document.getElementById('close-menu');
 
     if (burger && mobileMenu) {
-        burger.addEventListener('click', function() {
-            console.log('Burger clicked');  // Debugging log
+        burger.addEventListener('click', function () {
             mobileMenu.classList.toggle('hidden');
-            mobileMenu.classList.toggle('show'); // Toggle visibility class
         });
 
-        closeMenu.addEventListener('click', function() {
-            mobileMenu.classList.add('hidden'); // Hide menu on close button click
-            mobileMenu.classList.remove('show');
+        closeMenu?.addEventListener('click', function () {
+            mobileMenu.classList.add('hidden');
         });
     }
 
-        // Handle dropdown toggling
-        const locationButton = document.getElementById('locationButton');
-        const locationDropdown = document.getElementById('locationDropdown');
+    // Dropdown and Popover toggling
+    const locationButton = document.getElementById('dropdownSearchButton');
+    const locationDropdown = document.getElementById('dropdownSearch');
+    const locationLabel = locationButton.querySelector('span'); // Location button label (to update text)
 
-        const priceButton = document.getElementById('priceButton');
-        const pricePopover = document.getElementById('pricePopover');
+    const priceButton = document.getElementById('priceButton');
+    const pricePopover = document.getElementById('pricePopover');
 
-        const bedroomButton = document.getElementById('bedroomButton');
-        const bedroomPopover = document.getElementById('bedroomPopover');
+    const bedroomButton = document.getElementById('bedroomButton');
+    const bedroomPopover = document.getElementById('bedroomPopover');
 
-        // Toggle Location Dropdown
+    let selectedLocations = [];
+
+    if (locationButton && locationDropdown) {
         locationButton.addEventListener('click', function (e) {
             e.stopPropagation();
             locationDropdown.classList.toggle('hidden');
-            pricePopover.classList.add('hidden');
-            bedroomPopover.classList.add('hidden');
+            pricePopover?.classList.add('hidden');
+            bedroomPopover?.classList.add('hidden');
         });
 
-        // Toggle Price Popover
-        priceButton.addEventListener('click', function (e) {
-            e.stopPropagation();
-            pricePopover.classList.toggle('hidden');
-            locationDropdown.classList.add('hidden');
-            bedroomPopover.classList.add('hidden');
+        // Track selected locations
+        const locationCheckboxes = locationDropdown.querySelectorAll('input[type="checkbox"]');
+        locationCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                if (checkbox.checked) {
+                    if (!selectedLocations.includes(checkbox.value)) {
+                        selectedLocations.push(checkbox.value);
+                    }
+                } else {
+                    const index = selectedLocations.indexOf(checkbox.value);
+                    if (index > -1) {
+                        selectedLocations.splice(index, 1);
+                    }
+                }
+            });
         });
 
-        // Toggle Bedroom Popover
-        bedroomButton.addEventListener('click', function (e) {
-            e.stopPropagation();
-            bedroomPopover.classList.toggle('hidden');
+        // Close location dropdown and update button text when არჩევა is clicked
+        const applyLocationButton = locationDropdown.querySelector('button[type="button"]');
+        applyLocationButton?.addEventListener('click', function () {
             locationDropdown.classList.add('hidden');
-            pricePopover.classList.add('hidden');
+            // Update the button text with the selected locations
+            if (selectedLocations.length > 0) {
+                locationButton.textContent = selectedLocations.join(', ');
+            } else {
+                locationButton.textContent = 'მდებარეობა'; // Default text when no location is selected
+            }
+
+            // Update the form with selected locations (without submitting it)
+            const searchForm = document.getElementById('searchForm');
+            const locationInputs = searchForm.querySelectorAll('input[name="district"]');
+            locationInputs.forEach(input => input.remove()); // Clear previous inputs
+
+            selectedLocations.forEach(function (location) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'district';
+                input.value = location;
+                searchForm.appendChild(input);
+            });
+
+            // Do NOT submit the form pls
         });
+    }
+
+        if (priceButton && pricePopover) {
+            priceButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                pricePopover.classList.toggle('hidden');
+                locationDropdown?.classList.add('hidden');
+                bedroomPopover?.classList.add('hidden');
+            });
+        }
+
+        if (bedroomButton && bedroomPopover) {
+            bedroomButton.addEventListener('click', function (e) {
+                e.stopPropagation();
+                bedroomPopover.classList.toggle('hidden');
+                locationDropdown?.classList.add('hidden');
+                pricePopover?.classList.add('hidden');
+            });
+        }
 
         // Close all dropdowns/popovers when clicking outside
         document.addEventListener('click', function () {
-            locationDropdown.classList.add('hidden');
-            pricePopover.classList.add('hidden');
-            bedroomPopover.classList.add('hidden');
+            locationDropdown?.classList.add('hidden');
+            pricePopover?.classList.add('hidden');
+            bedroomPopover?.classList.add('hidden');
         });
 
-        // Prevent dropdowns from closing when clicking inside them
-        locationDropdown.addEventListener('click', function (e) {
+        // Prevent closing dropdowns/popovers when clicking inside
+        locationDropdown?.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        pricePopover?.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+        bedroomPopover?.addEventListener('click', function (e) {
             e.stopPropagation();
         });
 
-        pricePopover.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        bedroomPopover.addEventListener('click', function (e) {
-            e.stopPropagation();
-        });
-
-        // Variables for price and bedroom selections
-        const applyPriceButton = document.getElementById('applyPriceButton');
-        const priceInputMin = document.getElementById('min-price');
-        const priceInputMax = document.getElementById('max-price');
-
+        // Handle bedroom selection
         const applyBedroomButton = document.getElementById('applyBedroomButton');
         const bedroomInput = document.getElementById('bedroomInput');
-        let selectedBedroom = ""; // Variable to hold selected bedroom value
-
-        // Handle bedroom option selection (visually mark and apply)
         const bedroomOptions = document.querySelectorAll('.popover-button');
+
+        let selectedBedroom = "";
+
         bedroomOptions.forEach(function (option) {
             option.addEventListener('click', function () {
-                // Remove active classes from all buttons
                 bedroomOptions.forEach(btn => btn.classList.remove('bg-blue-500', 'text-white'));
-                // Add active classes to the clicked button
                 option.classList.add('bg-blue-500', 'text-white');
-                // Store the selected bedroom value
                 selectedBedroom = option.textContent.trim();
-                // Set the hidden input value
                 bedroomInput.value = selectedBedroom.includes('+') ? selectedBedroom.slice(0, -1) : selectedBedroom;
             });
         });
 
-        // Apply Bedroom Filter when "არჩევა" is clicked
-        applyBedroomButton.addEventListener('click', function () {
-            if (selectedBedroom !== "") {
-                bedroomPopover.classList.add('hidden'); // Close the popover
-                document.getElementById('searchForm').submit(); // Submit the form
+        applyBedroomButton?.addEventListener('click', function () {
+            if (selectedBedroom) {
+                bedroomPopover.classList.add('hidden');
+                bedroomPopover?.classList.add('hidden');
             } else {
                 alert("Please select a bedroom option.");
             }
         });
 
-        // Apply Price Filter when "არჩევა" is clicked
-        applyPriceButton.addEventListener('click', function () {
-            const minPrice = priceInputMin.value;
-            const maxPrice = priceInputMax.value;
+        // Handle price range selection
+        const applyPriceButton = document.getElementById('applyPriceButton');
+        const priceInputMin = document.getElementById('min-price');
+        const priceInputMax = document.getElementById('max-price');
 
-            if (minPrice && maxPrice) {
-                if (parseInt(minPrice) <= parseInt(maxPrice)) {
-                    document.getElementById('searchForm').submit();
-                } else {
-                    alert("Ensure the minimum price is less than the maximum price.");
-                }
+        applyPriceButton?.addEventListener('click', function () {
+            const minPrice = parseInt(priceInputMin.value, 10);
+            const maxPrice = parseInt(priceInputMax.value, 10);
+
+            if (!isNaN(minPrice) && !isNaN(maxPrice) && minPrice <= maxPrice) {
+                pricePopover?.classList.add('hidden');
             } else {
-                alert("Please fill in both minimum and maximum price.");
+                alert("Ensure valid price values and that minimum is less than or equal to maximum.");
             }
         });
 
-        // Horizontal scroll for hot offers section
+        // Horizontal scroll for hot offers
         document.getElementById('nextButton')?.addEventListener('click', function () {
             document.getElementById('hotOffersSection').scrollBy({
                 left: 300,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         });
 
         document.getElementById('prevButton')?.addEventListener('click', function () {
             document.getElementById('hotOffersSection').scrollBy({
                 left: -300,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         });
     });
@@ -488,5 +571,6 @@
 
 </body>
 </html>
+
 
 
