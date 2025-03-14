@@ -1,3 +1,9 @@
 # Ignore credentials file
 creds.json
 config.json
+.DS_Store
+.idea
+chromedriver
+venv/
+__pycache__/
+static/images
