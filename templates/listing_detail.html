@@ -19,233 +19,883 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" />
     <!-- FancyBox JS -->
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script>
-
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
     <style>
-        /* Attribute Styling */
-        .attribute {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: #333;
-            margin-right: 16px;
-            font-size: 1rem;
-        }
-        .attribute .value {
-            font-size: 1.9rem;
-            color: #333;
-            margin-bottom: 0;
-        }
-        .attribute .label {
-            color: #777;
-            margin-top: -5px;
-            font-size: 0.9rem;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            min-height: 100vh;
+            line-height: 1.5;
         }
 
-        /* Header Section */
-        .header-section {
+        .container {
+            padding: 2rem 1rem;
+        }
+
+        /* Image Gallery Section */
+        .swiper-container {
+            height: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            background-color: #f8fafc;
+        }
+
+        .swiper-slide {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8fafc;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Navigation Arrows */
+        .swiper-button-next,
+        .swiper-button-prev {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            color: #3b82f6;
+        }
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .swiper-button-next {
+            right: 16px;
+        }
+
+        .swiper-button-prev {
+            left: 16px;
+        }
+
+        /* Property Badge */
+        .property-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Image Counter */
+        .image-counter {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #1e293b;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        /* Main Content Layout */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgb(255, 255, 255);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.5rem 1rem;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .header-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: all 0.2s;
+            transform: translateX(-50%);
+        }
+
+        .header-links a:hover::after {
+            width: 80%;
+        }
+
+        /* Property Header Section */
+        .property-header {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: flex-start;
-            margin-top: 20px;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
-        .header-section div {
-            margin-bottom: 16px;
+
+        .property-header-left {
+            flex: 1;
+            min-width: 300px;
         }
-        .attributes-section {
+
+        .property-header-right {
             display: flex;
             flex-wrap: wrap;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        .attributes-section .attribute {
-
-            margin-bottom: 16px;
+            gap: 1rem;
         }
 
-        /* Call to Action Button Styling */
-        .cta-button {
-            background-color: #3b82f6;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.3s;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .cta-button:hover {
-            background-color: #2563eb;
-        }
-
-        /* Responsive Styling for Smaller Screens */
-        @media (max-width: 768px) {
-            .swiper-container {
-                height: 250px; /* Smaller height for mobile */
-            }
-            .header-section {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .attributes-section {
-                justify-content: flex-start;
-            }
-            .attribute {
-                margin-right: 12px;  /* Reduced margin for attributes */
-                margin-bottom: 8px;   /* Reduced margin for attributes */
-                font-size: 0.9rem;    /* Smaller font size for attributes */
-            }
-            .attribute .value {
-                font-size: 1.5rem;    /* Smaller value font size */
-            }
-            .attribute .label {
-                font-size: 0.8rem;     /* Smaller label font size */
-                margin-top: -3px;     /* Adjust margin to keep labels closer */
-            }
-            .description {
-                margin-top: 10px;
-            }
-            .swiper-pagination {
-                bottom: 20px !important;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .swiper-container {
-                height: 500px; /* Larger height for desktop */
-                min-height: 500px;
-            }
-            .swiper-slide {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                height: 100%;
-            }
-            .swiper-slide img {
-                width: 100%;
-                height: auto;
-                object-fit: contain;
-                max-height: 500px;
-                border-radius: 8px;
-            }
-            .swiper-pagination {
-                bottom: 10px !important;
-                z-index: 15;
-            }
-            .description {
-                margin-top: 20px;
-            }
-        }
-
-        /* Swiper Wrapper Styling */
-        .swiper-wrapper {
-            width: 100%;
-            height: auto;
-            padding-bottom: 64px !important;
-            transition-timing-function: linear !important;
-            position: relative;
-            z-index: auto !important;
-        }
-
-        /* Swiper Pagination Bullets */
-        .swiper-pagination-bullet {
-            background: #ffffff;
-        }
-
-        /* Custom Navigation Buttons Styling */
-        .custom-swiper-button {
-            width: 48px;
-            height: 48px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 2px solid #4f46e5;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
+        /* Price Section Enhancement */
+        .price-section {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s, transform 0.3s;
-            cursor: pointer;
-            z-index: 20;
-            position: relative;
-        }
-
-        .custom-swiper-button:hover {
-            background-color: #4f46e5;
-            transform: scale(1.1);
-        }
-
-        .custom-swiper-button svg {
-            transition: color 0.3s;
-        }
-
-        .custom-swiper-button:hover svg {
-            color: white;
-        }
-
-        /* Description Styling */
-        .description {
-            white-space: normal; /* Allows text to wrap to the next line */
-            word-wrap: break-word; /* Breaks long words onto the next line */
-            line-height: 1.6; /* Increases line spacing for readability */
-            color: #4a5568;
+            align-items: baseline;
+            gap: 0.75rem;
             margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .original-price {
+            color: #94a3b8;
+            text-decoration: line-through;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+
+        .current-price {
+            color: #1e293b;
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        /* Listing Info Enhancement */
+        .listing-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
             margin-top: 1rem;
         }
 
-        /* Back Button Styling */
-        .back-button {
-            background-color: #e2e8f0; /* Light gray background */
-            color: #4a5568; /* Text color */
-            padding: 0.5rem 0.5rem; /* Padding around the button */
-            border-radius: 0.375rem; /* Rounded corners */
-            border: 2px solid #6D7886; /* Border color */
-            text-decoration: none; /* Remove underline from link */
-            display: inline-flex; /* Align icon and text */
-            align-items: center; /* Center align items */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+        .listing-info > div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 48px;
         }
 
-        .back-button:hover {
-            background-color: #929AA4; /* Change background on hover */
-            color: white; /* Change text color on hover */
-            transform: translateY(-2px); /* Slight lift effect on hover */
+        .listing-info > div:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .listing-info svg {
+            width: 20px;
+            height: 20px;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .listing-info span {
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .location-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 48px;
+            grid-column: 1 / 2;
+        }
+
+        .location-badge:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .location-badge span {
+            font-size: 0.95rem;
+            color: #475569;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Attributes Section */
+        .attributes-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .attribute {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #1e293b;
+            background: white;
+            padding: 1.25rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            min-width: 100px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            flex: 1;
+            max-width: 120px;
+        }
+
+        .attribute:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .attribute .value {
+            font-size: 1.75rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .attribute .label {
+            color: #64748b;
+            margin-top: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            color: #475569;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-item svg {
+            width: 20px;
+            height: 20px;
+            color: #3b82f6;
+        }
+
+        /* Description Section */
+            .description {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .description-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .description p {
+            color: #475569;
+            line-height: 1.6;
+            font-size: 1rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* Call to Action Section */
+        .cta-section {
+                display: flex;
+                justify-content: center;
+            padding: 1.25rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            margin-top: 1.5rem;
         }
 
         .call-button {
-            display: inline-flex; /* Align icon and text */
-            align-items: center; /* Center align items vertically */
-            font-size: 1rem; /* Set font size */
+            display: inline-flex;
+            align-items: center;
+            font-size: 1rem;
+            background: #10b981;
+            padding: 0.875rem 1.75rem;
+            border-radius: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            width: 100%;
+            max-width: 300px;
+            justify-content: center;
         }
 
         .call-button:hover {
-            transform: scale(1.05); /* Slightly enlarge on hover */
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
         }
-        .zoom-icons {
-            position: absolute;
-            z-index: 10;
+
+        /* Back Button */
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.875rem 1.5rem;
+            background: white;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+            min-width: 160px;
+            justify-content: center;
         }
-        .zoom-in, .zoom-out {
+
+        .back-button:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        .back-button svg {
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-4px);
+        }
+
+        /* Bottom Action Bar */
+        .bottom-action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: center;
-            align-items: center;
-            transition: transform 0.3s ease, background-color 0.3s ease;
+            gap: 1rem;
         }
-        .zoom-in:hover, .zoom-out:hover {
-            transform: scale(1.1);
-        }
-        .listing-image {
-        transition: transform 0.3s ease;
-        transform-origin: center; /* Ensures zoom occurs from the center */
-    }
-    </style>
 
+        .bottom-action-bar.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Common Button Styles */
+        .back-button,
+        .call-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+            min-width: 180px;
+            height: 48px;
+            font-size: 1rem;
+            text-decoration: none;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .back-button span,
+        .call-button span {
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Back Button Specific */
+        .back-button {
+            background: white;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .back-button:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Call Button Specific */
+        .call-button {
+            background: #10b981;
+            color: white;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+        }
+
+        .call-button:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        /* Common Icon Styles */
+        .back-button svg,
+        .call-button svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover svg {
+            transform: translateX(-4px);
+        }
+
+        /* Custom Navigation Buttons */
+        .custom-swiper-button {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .custom-swiper-button:hover {
+            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0.5rem;
+            }
+
+            .content-wrapper {
+                padding: 1rem;
+            }
+
+            .swiper-container {
+                height: 300px;
+            }
+
+            .swiper-button-next,
+            .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+
+            .swiper-button-next:after,
+            .swiper-button-prev:after {
+                font-size: 16px;
+            }
+
+            .property-header {
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .property-header-left {
+                min-width: 100%;
+            }
+
+            .property-header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .attribute {
+                flex: 1;
+                min-width: 100px;
+                padding: 1rem;
+            }
+
+            .current-price {
+                font-size: 2rem;
+            }
+
+            .listing-info {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .listing-info > div,
+            .location-badge {
+                height: 44px;
+                padding: 0.5rem;
+                grid-column: auto;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .description {
+                padding: 1rem;
+            }
+
+            .description-title {
+                font-size: 1.125rem;
+                margin-bottom: 0.75rem;
+            }
+
+            .description p {
+                font-size: 0.95rem;
+            }
+
+            .cta-section {
+                padding: 1rem;
+            }
+
+            .call-button {
+                font-size: 0.95rem;
+                padding: 0.75rem 1.5rem;
+            }
+
+            .back-button {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.95rem;
+            }
+
+            .bottom-action-bar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .back-button,
+            .call-button {
+                width: 100%;
+                min-width: unset;
+                max-width: none;
+                height: 48px;
+                padding: 0.75rem 1rem;
+                font-size: 0.95rem;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+            }
+
+            .back-button span,
+            .call-button span {
+                flex: 1;
+                text-align: center;
+                margin-right: 20px;
+            }
+
+            .back-button svg,
+            .call-button svg {
+                width: 20px;
+                height: 20px;
+                margin-right: 0.75rem;
+            }
+        }
+
+        /* Burger Menu Styles */
+        #burger {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 8px;
+            display: none;
+            z-index: 1002;
+        }
+
+        @media (max-width: 768px) {
+            #burger {
+                display: block;
+            }
+        }
+
+        #burger:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        #burger svg {
+            transition: transform 0.3s ease;
+        }
+
+        #burger.active svg {
+            transform: rotate(90deg);
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #mobile-menu.hidden {
+            right: -100%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #mobile-menu:not(.hidden) {
+            right: 0;
+            opacity: 1;
+            pointer-events: auto;
+            background-color: #ffffff;
+        }
+
+        #mobile-menu a {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #mobile-menu a:hover {
+            background-color: #ffffff;
+            color: #2563eb;
+            transform: translateX(5px);
+            border-color: #2563eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        #close-menu {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            z-index: 1002;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #close-menu:hover {
+            background-color: #f3f4f6;
+            transform: rotate(90deg);
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        /* Overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+        }
+
+        .menu-overlay.visible {
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            #mobile-menu {
+                display: none;
+            }
+            .menu-overlay {
+                display: none;
+            }
+        }
+    </style>
     </head>
-    <body class="bg-gray-100">
-        <div class="container mx-auto p-4 max-w-5xl"> <!-- Increased max-width from 4xl to 5xl -->
-            <article class="bg-white p-6 rounded-lg shadow-md w-full">
+<body>
+    <!-- Menu Overlay (moved outside header) -->
+    <div class="menu-overlay"></div>
+
+    <!-- Header -->
+    <header class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 relative">
+            <div class="flex justify-center items-center text-gray-800 text-xl" id="header-spacing">
+                <div class="flex-1 flex justify-start">
+                    <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300 hidden md:inline">კონტაქტი</a>
+                </div>
+
+                <!-- Logo centered -->
+                <a href="{{ url_for('landing') }}" class="flex items-center">
+                    <img src="{{ url_for('static', filename='pics/settler logo .png') }}" alt="Logo" style="height: 70px; width: auto;">
+                </a>
+
+                <div class="flex-1 flex justify-end">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300">ბლოგი</a>
+                    </div>
+
+                    <!-- Burger menu for mobile -->
+                    <button id="burger" class="md:hidden p-2 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu (hidden) -->
+            <div id="mobile-menu" class="hidden">
+                <button id="close-menu" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('blog') }}" class="mobile-menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    კონტაქტი
+                </a>
+                <a href="{{ url_for('blog') }}" class="mobile-menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    ბლოგი
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto max-w-6xl">
+        <article class="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <!-- Image Gallery Section -->
                 <div class="w-full relative">
                     <div class="swiper default-carousel swiper-container">
@@ -259,55 +909,74 @@
                             {% endfor %}
                         </div>
 
+                    <!-- Property Badge -->
+                    <div class="property-badge">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+                                </svg>
+                        <span>Property For Sale</span>
+                    </div>
 
-                        <!-- Custom Navigation Buttons -->
-                        <div class="absolute top-1/2 left-4 right-4 flex justify-between items-center transform -translate-y-1/2">
-                            <button id="custom-button-prev" class="custom-swiper-button" aria-label="Previous slide">
-                                <!-- Left Arrow SVG -->
-                                <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
-                            <button id="custom-button-next" class="custom-swiper-button" aria-label="Next slide">
-                                <!-- Right Arrow SVG -->
-                                <svg class="h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                            </button>
+                    <!-- Image Counter -->
+                    <div class="image-counter">
+                        <span class="current-image">1</span> / <span class="total-images">{{ listing.image_urls|length }}</span>
                         </div>
+
+                    <!-- Swiper Navigation -->
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
 
                         <!-- Swiper Pagination -->
                         <div class="swiper-pagination"></div>
                     </div>
                 </div>
 
-                <!-- Header Section -->
-                <header class="header-section">
-                    <div>
-                        <h1 class="text-3xl md:text-2xl font-bold mb-2">
+            <!-- Main Content -->
+            <div class="content-wrapper">
+                <!-- Property Header Section -->
+                <div class="property-header">
+                    <div class="property-header-left">
+                        <div class="price-section">
                             {% if listing.discounted_price != listing.original_price and listing.original_price %}
-                                <span class="text-sm text-gray-500 line-through">${{ listing.original_price }}</span>
+                                <span class="original-price">${{ listing.original_price }}</span>
                             {% endif %}
-                            <strong class="text-3xl text-black">${{ listing.discounted_price }}</strong>
-                        </h1>
-                        <!-- Add the ID in the bottom-left corner -->
-                        <div class="listing-id" style="color: #666;">
-                            ID: {{ listing.listing_id }}
+                            <span class="current-price">${{ listing.discounted_price }}</span>
                         </div>
-                        <p class="date-time" style="color: #666;">
-                            თარიღი: {{ listing.date_time }}
-                        </p>
-                        <p class="text-gray-600">{{ listing.district }}</p>
-                        <p class="text-gray-600">{{ listing.build_period }}</p>
+                        <div class="listing-info">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                </svg>
+                                <span>ID: {{ listing.listing_id }}</span>
+                            </div>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                                </svg>
+                                <span>{{ listing.date_time }}</span>
+                            </div>
+                            <div class="location-badge">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                </svg>
+                                <span>{{ listing.district }}</span>
+                            </div>
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-.75 3h1.5m-.75 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                                </svg>
+                                <span>{{ listing.build_period }}</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Attributes Section -->
+                    <div class="property-header-right">
                     <div class="attributes-section">
                         <div class="attribute">
                             <span class="value">{{ listing.bedrooms }}</span>
                             <span class="label">საძინებელი</span>
                         </div>
-
                     <div class="attribute">
                         <span class="value">{{ listing.floors }}</span>
                         <span class="label">სართული</span>
@@ -317,38 +986,60 @@
                         <span class="label">კვ.მ</span>
                     </div>
                 </div>
-            </header>
-
-
+                    </div>
+                </div>
 
                 <!-- Description -->
-                <p class="description">{{ listing.description }}</p>
+                <div class="description">
+                    <h3 class="description-title">Property Description</h3>
+                    <p>{{ listing.description }}</p>
+                </div>
+
+                <!-- Features Grid -->
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-.75 3h1.5m-.75 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                        </svg>
+                        <span>Modern Design</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                        </svg>
+                        <span>Energy Efficient</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                        </svg>
+                        <span>Prime Location</span>
+                    </div>
+                </div>
 
                 <!-- Call to Action -->
-                <div class="mt-8 mb-2">
-                    <a href="tel:+995555121150" class="call-button flex items-center bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition duration-200">
-                        <!-- New Heroicon SVG for Phone -->
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 mr-2">
+                <div class="cta-section">
+                    <!-- Removed duplicate call button -->
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <!-- Bottom Action Bar -->
+    <div class="bottom-action-bar">
+        <a href="tel:+995555121150" class="call-button">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 3.75v4.5m0-4.5h-4.5m4.5 0-6 6m3 12c-8.284 0-15-6.716-15-15V4.5A2.25 2.25 0 0 1 4.5 2.25h1.372c.516 0 .966.351 1.091.852l1.106 4.423c.11.44-.054.902-.417 1.173l-1.293.97a1.062 1.062 0 0 0-.38 1.21 12.035 12.035 0 0 0 7.143 7.143c.441.162.928-.004 1.21-.38l.97-1.293a1.125 1.125 0 0 1 1.173-.417l4.423 1.106c.5.125.852.575.852 1.091V19.5a2.25 2.25 0 0 1-2.25 2.25h-2.25Z"></path>
                         </svg>
                         <span>+995 555 121 150</span>
                     </a>
-{#                    <div class="date-time" style="color: #666;">#}
-{#                            დამატების დრო: {{ listing.date_time }}#}
-{#                    </div>#}
-                </div>
-        </article>
-
-        <!-- Back to Listings -->
-        <footer>
-            <a href="/" class="mt-8 back-button flex items-center text-indigo-600 hover:text-indigo-800">
-                <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <a href="/" class="back-button">
+            <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
                 <span>უკან დაბრუნება</span>
             </a>
-        </footer>
-
     </div>
 
     <!-- Swiper JS -->
@@ -356,22 +1047,17 @@
     <script>
           // Initialize FancyBox
         Fancybox.bind('[data-fancybox="gallery"]', {
-            // Optional: Customize options here
             infinite: true,
             buttons: ["zoom", "slideShow", "fullScreen", "close"],
-        });
-        Fancybox.bind('[data-fancybox="gallery"]', {
-            infinite: true, // Loop through images
-            toolbar: true, // Show toolbar
-            animated: true, // Enable animation
-            dragToClose: true, // Drag down to close
+            toolbar: true,
+            animated: true,
+            dragToClose: true,
             showClass: "fancybox-fadeIn",
             hideClass: "fancybox-fadeOut",
             Thumbs: {
-                autoStart: true, // Show thumbnails
+                autoStart: true,
             },
         });
-
 
         var swiper = new Swiper(".default-carousel", {
             loop: true,
@@ -380,10 +1066,124 @@
                 clickable: true,
             },
             navigation: {
-                nextEl: "#custom-button-next", // Point to custom next button
-                prevEl: "#custom-button-prev", // Point to custom prev button
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
             },
+            effect: "fade",
+            fadeEffect: {
+                crossFade: true
+            },
+            on: {
+                slideChange: function () {
+                    const currentSlide = this.realIndex + 1;
+                    document.querySelector('.current-image').textContent = currentSlide;
+                }
+            }
+        });
+
+        // Set initial image counter
+        document.querySelector('.current-image').textContent = '1';
+        document.querySelector('.total-images').textContent = '{{ listing.image_urls|length }}';
+
+        // Bottom action bar visibility on scroll
+        const bottomActionBar = document.querySelector('.bottom-action-bar');
+        let lastScrollTop = 0;
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // Show bar when scrolling down past 100px
+            if (scrollTop > 100) {
+                bottomActionBar.classList.add('visible');
+            } else {
+                bottomActionBar.classList.remove('visible');
+            }
+
+            lastScrollTop = scrollTop;
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const burger = document.getElementById('burger');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeMenu = document.getElementById('close-menu');
+            const body = document.body;
+
+            function openMenu() {
+                mobileMenu.classList.remove('hidden');
+                burger.classList.add('active');
+            }
+
+            function closeMenuHandler() {
+                mobileMenu.classList.add('hidden');
+                burger.classList.remove('active');
+            }
+
+            if (burger && mobileMenu) {
+                burger.addEventListener('click', openMenu);
+                closeMenu?.addEventListener('click', closeMenuHandler);
+
+                // Close menu on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                        closeMenuHandler();
+                    }
+                });
+
+                // Close menu when clicking a menu item
+                const menuItems = mobileMenu.querySelectorAll('a');
+                menuItems.forEach(item => {
+                    item.addEventListener('click', closeMenuHandler);
+                });
+            }
         });
     </script>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Main Footer Content -->
+            <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-12">
+                <!-- Contact Section -->
+                <div class="mb-6 md:mb-0 text-center md:text-left md:mr-20">
+                    <h3 class="text-lg font-bold mb-4">კონტაქტი</h3>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ჩვენ შესახებ</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">კონტაქტი</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">პარტნიორები</a></li>
+                    </ul>
+                </div>
+                <!-- Follow Us Section -->
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h3 class="text-lg font-bold mb-4">სასარგებლო ბმულები</h3>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ფასდაკლება</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ახალი აშენებული</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">გაყიდვა</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Social Media Icons -->
+            <div class="mt-8 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Facebook">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- Facebook Icon -->
+                        <path d="M22 12c0-5.522-4.478-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898v-2.89h2.54V9.797c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.991 22 12z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Twitter">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- Twitter Icon -->
+                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016.5 3c-2.74 0-4.95 2.21-4.95 4.95 0 .39.04.77.11 1.14C7.69 8.81 4.1 6.87 1.67 3.89a4.822 4.822 0 00-.66 2.48c0 1.71.87 3.23 2.19 4.12a4.493 4.493 0 01-2.24-.62v.06c0 2.38 1.69 4.36 3.95 4.81a4.6 4.6 0 01-2.23.08c.63 1.97 2.45 3.4 4.6 3.44A9.282 9.282 0 010 19.54a13.94 13.94 0 007.548 2.21c9.05 0 14-7.496 14-13.986 0-.21 0-.42-.02-.63A9.935 9.935 0 0024 4.59z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="LinkedIn">
+                    <svg class="w-6 h-6 md:w-8 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- LinkedIn Icon -->
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.065-1.868-3.065-1.869 0-2.156 1.46-2.156 2.967v5.7h-3v-10h2.884v1.367h.041c.403-.765 1.388-1.57 2.852-1.57 3.048 0 3.61 2.006 3.61 4.616v5.605z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
