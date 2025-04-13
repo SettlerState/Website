@@ -346,7 +346,7 @@ def landing():
     pagination_range = get_page_range(page, total_pages)
 
     return render_template(
-        'landing page with filter.html',
+        'landing_page_with_filter.html',
         listings=paginated_listings,
         hot_offers=hot_offers if not filters_applied else [],  # Hide hot offers if filters exist
         districts=distinct_districts,
@@ -768,7 +768,7 @@ if __name__ == '__main__':
 #     pagination_range = get_page_range(page, total_pages)
 #
 #     return render_template(
-#         'landing page with filter.html',
+#         'landing_page_with_filter.html',
 #         listings=paginated_listings,
 #         hot_offers=hot_offers if not filters_applied else [],  # Hide hot offers if filters exist
 #         districts=distinct_districts,
