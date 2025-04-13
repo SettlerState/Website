@@ -25,7 +25,10 @@ app = Flask(__name__)
 with open('config.json') as config_file:
     config = json.load(config_file)
 # creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
-creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+
+# creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+creds_path = os.path.expanduser("/home/tatuliusi/production/secrets/creds.json")
+
 # Global variables
 listings = []
 IMAGE_CACHE_DIR = "static/images"  # Base directory for cached images
@@ -133,8 +136,10 @@ def extract_attributes(full_worksheet, links):
         # Extract other attributes
         link = normalize_link(row[5]) if len(row) > 5 else ''
         description = row[description_col].strip() if len(row) > description_col else 'Description not available'
-        discounted_price = row[discounted_price_col].strip() if len(row) > discounted_price_col else ('Price not available')
-        original_price = row[original_price_col].strip() if len(row) > original_price_col else ('Original Price not available')
+        discounted_price = row[discounted_price_col].strip() if len(row) > discounted_price_col else (
+            'Price not available')
+        original_price = row[original_price_col].strip() if len(row) > original_price_col else (
+            'Original Price not available')
         date_time = row[add_time_col].strip() if len(row) > add_time_col else 'Date not available'
 
         # Normalize prices
@@ -397,5 +402,3 @@ def without_filter():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
