@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Settler რეალტორის ოფისი - საუკეთესო ფასად ბინების ყიდვა, გაყიდვა და გაქირავება.">
+    <meta name="keywords" content="ბინები, უძრავი ქონება, ყიდვა, გაყიდვა, გაქირავება, Settler">
+    <meta property="og:title" content="Settler | ბინები საუკეთესო ფასად">
+    <meta property="og:description" content="ბინების სიახლეები გაყიდვის, ყიდვის და გაქირავების შესახებ საუკეთესო ფასად.">
+    <meta property="og:image" content="{{ url_for('static', filename='pics/listing_thumbnail.png') }}">
+    <meta property="og:url" content="https://www.settler.ge/">
+    <meta property="og:type" content="website">
+   <title>Settler | ბინები საუკეთესო ფასად</title>
+   <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
+    <style>
+        /* Modern Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .header-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.5rem 1rem;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: #4b5563;
+            font-weight: 500;
+            transition: all 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            position: relative;
+        }
+
+        .header-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #2563eb;
+            transition: all 0.2s;
+            transform: translateX(-50%);
+        }
+
+        .header-links a:hover::after {
+            width: 80%;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            height: 500px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Search Form */
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            align-items: flex-start;
+            width: 95%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .filter-button-container {
+            position: relative;
+            z-index: 40;
+            height: 100%;
+        }
+
+        .filter-button {
+            background: white;
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.95rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            min-height: 42px;
+            height: 100%;
+        }
+
+        .filter-button span {
+            flex: 1;
+            text-align: left;
+            margin-right: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.2;
+            max-height: 2.4em;
+        }
+
+        .filter-button svg {
+            flex-shrink: 0;
+        }
+
+        .filter-button:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .filter-button:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 42px;
+            width: 100%;
+        }
+
+        .search-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .search-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Burger Menu Styles */
+        #burger {
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 8px;
+            display: none;
+            z-index: 1002;
+        }
+
+        @media (max-width: 768px) {
+            #burger {
+                display: block;
+            }
+        }
+
+        #burger:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        #burger svg {
+            transition: transform 0.3s ease;
+        }
+
+        #burger.active svg {
+            transform: rotate(90deg);
+        }
+
+        #mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            background-color: #ffffff;
+            box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            border-left: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #mobile-menu.hidden {
+            right: -100%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #mobile-menu:not(.hidden) {
+            right: 0;
+            opacity: 1;
+            pointer-events: auto;
+            background-color: #ffffff;
+        }
+
+        #mobile-menu a {
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        #mobile-menu a:hover {
+            background-color: #ffffff;
+            color: #2563eb;
+            transform: translateX(5px);
+            border-color: #2563eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        #close-menu {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            z-index: 1002;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #close-menu:hover {
+            background-color: #f3f4f6;
+            transform: rotate(90deg);
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        /* Overlay for mobile menu */
+        .menu-overlay {
+            display: none;
+        }
+
+        .menu-overlay.visible {
+            display: none;
+        }
+
+        @media (min-width: 769px) {
+            #mobile-menu {
+                display: none;
+            }
+            .menu-overlay {
+                display: none;
+            }
+        }
+
+        /* Property Cards */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1.5rem;
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid #e5e7eb;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+
+        .property-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .property-card:hover .property-image {
+            transform: scale(1.05);
+        }
+
+        .property-content {
+            padding: 1.25rem;
+        }
+
+        .property-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .property-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+            color: #64748b;
+        }
+
+        .property-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .property-detail svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #2563eb;
+        }
+
+        /* Hot Offers Section */
+        .hot-offers {
+            padding: 2rem 1.5rem;
+            background: #f8fafc;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: #2563eb;
+            border-radius: 2px;
+        }
+
+        .hot-offers-carousel {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            width: 100%;
+        }
+
+        .hot-offers-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hot-offer-card {
+            flex: 0 0 100%;
+            scroll-snap-align: start;
+            padding: 0 0.5rem;
+            width: 100%;
+        }
+
+        /* Popovers */
+        .popover {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 50;
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .page-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #4b5563;
+            transition: all 0.2s;
+        }
+
+        .page-button:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .page-button.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 4rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: #e2e8f0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .social-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-section {
+                height: 450px;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+                margin-top: 0.5rem;
+            }
+
+            .search-form {
+                padding: 1.25rem;
+                gap: 0.5rem;
+            }
+
+            .property-grid {
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .hot-offers {
+                padding: 1.5rem 1rem;
+            }
+
+            .hot-offer-card {
+                flex: 0 0 100%;
+                width: 100%;
+            }
+
+            .popover {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 90%;
+                max-width: 400px;
+                max-height: 80vh;
+                overflow-y: auto;
+                overflow-x: hidden;
+                margin: 0 auto;
+            }
+
+            /* Fix for iPad resolution */
+            @media (min-width: 768px) and (max-width: 1024px) {
+                .popover {
+                    width: 95%;
+                    max-width: 500px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .hot-offer-card {
+                    flex: 0 0 100%;
+                    width: 100%;
+                }
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-section {
+                height: 400px;
+                margin-top: 0.5rem;
+                padding-top: 0.5rem;
+            }
+
+            .hero-content {
+                padding: 1rem;
+                margin-top: 0.5rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+
+            .hot-offers {
+                padding: 1.5rem 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .hot-offer-card {
+                flex: 0 0 100%;
+                width: 100%;
+            }
+
+            .popover {
+                width: 95%;
+                max-width: 400px;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .property-card {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .carousel-nav-btn {
+            @apply w-10 h-10 rounded-full bg-black shadow-md flex items-center justify-center text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200;
+        }
+
+        .carousel-nav-btn:hover {
+            @apply text-white;
+        }
+
+        .carousel-nav-btn:disabled {
+            @apply opacity-50 cursor-not-allowed;
+        }
+
+        #hotOffersSection {
+            @apply relative overflow-hidden;
+        }
+
+        #hotOffersSection .flex {
+            @apply transition-transform duration-300 ease-in-out;
+        }
+
+        @media (max-width: 640px) {
+            #hotOffersSection .flex {
+                @apply -ml-0;
+            }
+            #hotOffersSection > div > div {
+                @apply pl-0;
+            }
+            .w-full {
+                width: 100%;
+            }
+        }
+
+        /* Filter Styles */
+        .filter-button-container {
+            position: relative;
+            z-index: 40;
+        }
+
+        .filter-button-container.active {
+            z-index: 60;
+        }
+
+        .filter-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-button:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-button.active {
+            border-color: #2563eb;
+            background-color: #f0f7ff;
+        }
+
+        .filter-button span {
+            font-weight: 500;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.05);
+            z-index: 45;
+            display: none;
+        }
+
+        .modal-overlay.visible {
+            display: block;
+        }
+
+        /* Filter Dropdown */
+        .filter-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            min-width: 280px;
+            max-height: 85vh;
+            display: none;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.2s ease-in-out;
+            border: 1px solid #e5e7eb;
+        }
+
+        .filter-dropdown-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 3;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .filter-dropdown-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+            flex: 1;
+            padding-right: 16px;
+        }
+
+        .filter-dropdown-close {
+            width: 32px;
+            height: 32px;
+            padding: 6px;
+            border-radius: 50%;
+            border: 1px solid #e5e7eb;
+            background: white;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .filter-dropdown-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+            border-color: #d1d5db;
+            transform: scale(1.05);
+        }
+
+        .filter-dropdown-close:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+        }
+
+        .filter-dropdown-close svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+        }
+
+        @media (max-width: 768px) {
+            .filter-dropdown-header {
+                padding: 20px;
+            }
+
+            .filter-dropdown-close {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        .location-options-container {
+            padding: 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .location-option {
+            position: relative;
+        }
+
+        .location-option label {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            min-height: 48px;
+            user-select: none;
+            margin: 0;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .location-option label:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .location-option input[type="checkbox"] {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .location-option input[type="checkbox"]:checked {
+            background-color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .location-option input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .location-option span {
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Filter Actions */
+        .filter-actions {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+            z-index: 3;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .filter-clear-button {
+            padding: 12px 24px;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            max-width: 140px;
+        }
+
+        .filter-clear-button:hover {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .filter-apply-button {
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 2;
+        }
+
+        .filter-apply-button:hover {
+            background: #2563eb;
+        }
+
+        /* Filter Dropdown Content */
+        .filter-dropdown-content {
+            padding: 20px;
+        }
+
+        /* Price Inputs Container */
+        .price-inputs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .price-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .price-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .price-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        /* Bedroom Options */
+        .bedroom-options-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .filter-option {
+            width: 100%;
+            padding: 12px 16px;
+            text-align: center;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #374151;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-option:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .filter-option[aria-selected="true"] {
+            background: #ebf5ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .filter-dropdown {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                top: auto;
+                transform: translateY(100%);
+                border-radius: 20px 20px 0 0;
+                max-height: 85vh;
+                width: 100%;
+                max-width: none;
+                margin: 0;
+                border: none;
+                border-top: 1px solid #e5e7eb;
+            }
+
+            .filter-dropdown.visible {
+                transform: translateY(0);
+            }
+
+            .filter-dropdown-content {
+                padding: 16px;
+            }
+
+            .bedroom-options-container {
+                padding: 16px;
+                grid-template-columns: 1fr;
+            }
+
+            .filter-actions {
+                padding: 16px;
+            }
+
+            .filter-clear-button,
+            .filter-apply-button {
+                padding: 14px 20px;
+            }
+
+            .location-options-container {
+                grid-template-columns: 1fr;
+                padding: 16px;
+                gap: 12px;
+                max-height: 60vh;
+            }
+        }
+
+        /* Scrollbar Styles */
+        .location-options-container {
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+
+        .location-options-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .location-options-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .location-options-container::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        /* Animation */
+        .filter-dropdown {
+            transform-origin: top;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .filter-dropdown:not(.hidden) {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Accessibility */
+        .filter-dropdown:focus-within {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        .filter-option:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        /* High Contrast Mode */
+        @media (forced-colors: active) {
+            .filter-dropdown {
+                border: 2px solid ButtonText;
+            }
+
+            .location-option input[type="checkbox"] {
+                forced-color-adjust: none;
+            }
+        }
+
+        /* Price Inputs */
+        .price-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .price-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+            outline: none;
+        }
+
+        /* Apply Button */
+        .filter-apply-button {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-apply-button:hover {
+            background: #2563eb;
+        }
+
+        .filter-option {
+            width: 100%;
+            padding: 12px 16px;
+            text-align: center;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            color: #374151;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-option:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .filter-option[aria-selected="true"] {
+            background: #ebf5ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .filter-option:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        /* Clear All Filters Button Styles */
+        .clear-all-filters-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            white-space: nowrap;
+            min-height: 42px;
+            width: 100%;
+        }
+
+        .clear-all-filters-button:hover {
+            background: #e5e7eb;
+            color: #374151;
+            border-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+
+        .clear-all-filters-button:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .clear-all-filters-button svg {
+            transition: transform 0.2s ease;
+        }
+
+        .clear-all-filters-button:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Search Button Styles */
+        .search-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 42px;
+            width: 100%;
+        }
+
+        .search-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .search-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1rem;
+                width: 92%;
+            }
+
+            .filter-button-container {
+                width: 100%;
+            }
+
+            .filter-button {
+                width: 100%;
+                height: 42px;
+            }
+
+            .search-form > div {
+                width: 100%;
+            }
+
+            .search-form button {
+                width: 100%;
+                height: 42px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .search-form {
+                flex-direction: row;
+                align-items: stretch;
+                gap: 1rem;
+            }
+
+            .search-form > div {
+                flex: 1;
+            }
+
+            .search-form > div:last-child {
+                flex: 0 0 auto;
+                display: flex;
+                gap: 0.5rem;
+            }
+
+            .filter-button {
+                height: 42px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Menu Overlay (moved outside header) -->
+    <div class="menu-overlay"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="max-w-7xl mx-auto px-4 relative">
+            <div class="flex justify-center items-center text-gray-800 text-xl" id="header-spacing">
+                <div class="flex-1 flex justify-start">
+                    <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300 hidden md:inline">კონტაქტი</a>
+                </div>
+
+                <!-- Logo centered -->
+                <a href="{{ url_for('landing') }}" class="flex items-center">
+                    <img src="{{ url_for('static', filename='pics/settler logo .png') }}" alt="Logo" style="height: 70px; width: auto;">
+                </a>
+
+                <div class="flex-1 flex justify-end">
+                    <div class="hidden md:flex items-center space-x-1">
+                        <a href="{{ url_for('blog') }}" class="py-2 px-3 hover:text-gray-300">ბლოგი</a>
+                    </div>
+
+                    <!-- Burger menu for mobile -->
+                    <button id="burger" class="md:hidden p-2 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile menu (hidden) -->
+            <div id="mobile-menu" class="hidden">
+                <button id="close-menu" aria-label="Close menu">✕</button>
+                <a href="{{ url_for('blog') }}" class="mobile-menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>
+                    კონტაქტი
+                </a>
+                <a href="{{ url_for('blog') }}" class="mobile-menu-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                    </svg>
+                    ბლოგი
+                </a>
+            </div>
+        </div>
+    </header>
+
+   <main class="w-full">
+        <!-- Hero Section -->
+        <section class="relative w-full bg-gray-300 md:h-screen lg:h-[500px] hero-section"
+            style="background-image: url('{{ url_for('static', filename='pics/cover.jpeg') }}');">
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+
+            <div class="relative z-10 flex flex-col items-center justify-center h-full px-4 sm:px-6 lg:px-8">
+                <h1 class="text-white text-2xl md:text-4xl lg:text-5xl font-semibold mb-6 text-center">
+                    აღმოაჩინე ბინები <br> საუკეთესო ფასად
+                </h1>
+                <form action="{{ url_for('landing') }}" method="get" id="searchForm" class="w-full max-w-5xl bg-white bg-opacity-95 p-6 md:p-8 rounded-xl shadow-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- Location Filter Input -->
+                        <div class="relative">
+                            <button id="dropdownSearchButton" data-dropdown-toggle="dropdownSearch"
+                                    class="w-full h-[42px] bg-white border border-gray-200 rounded-lg px-4 py-2 text-left flex items-center justify-between hover:border-blue-500 transition-colors"
+                                    type="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <span class="text-base font-medium truncate">მდებარეობა</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="dropdownSearch" class="filter-dropdown hidden" role="dialog" aria-labelledby="locationFilterTitle">
+                                <div class="filter-dropdown-header">
+                                    <h3 id="locationFilterTitle">აირჩიეთ მდებარეობა</h3>
+                                    <button type="button" class="filter-dropdown-close" aria-label="Close location filter">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                            <path d="M15 5L5 15M5 5L15 15" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="location-options-container">
+                                    {% for district in districts %}
+                                    <div class="location-option">
+                                        <label>
+                                            <input type="checkbox"
+                                                   name="district"
+                                                   value="{{ district }}"
+                                                   aria-label="Select {{ district }}">
+                                            <span>{{ district }}</span>
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="filter-actions">
+                                    <button type="button" class="filter-clear-button" id="clearSelection">
+                                        გასუფთავება
+                                    </button>
+                                    <button type="button" class="filter-apply-button">
+                                        არჩევა
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Filter -->
+                        <div class="relative">
+                            <button id="priceButton"
+                                    class="w-full h-[42px] bg-white border border-gray-200 rounded-lg px-4 py-2 text-left flex items-center justify-between hover:border-blue-500 transition-colors"
+                                    type="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <span class="text-base font-medium truncate">ფასი</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <!-- Price Dropdown -->
+                            <div id="pricePopover" class="filter-dropdown hidden" role="dialog" aria-labelledby="priceFilterTitle">
+                                <div class="filter-dropdown-header">
+                                    <h3 id="priceFilterTitle">აირჩიეთ ფასი</h3>
+                                    <button type="button" class="filter-dropdown-close" aria-label="Close price filter">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                            <path d="M15 5L5 15M5 5L15 15" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="filter-dropdown-content">
+                                    <div class="price-inputs-container">
+                                        <div class="price-input-group">
+                                            <label for="min-price" class="text-sm font-medium text-gray-700">მინიმალური ფასი</label>
+                                            <input type="text" id="min-price" class="price-input" placeholder="0" aria-label="Minimum price">
+                                        </div>
+                                        <div class="price-input-group">
+                                            <label for="max-price" class="text-sm font-medium text-gray-700">მაქსიმალური ფასი</label>
+                                            <input type="text" id="max-price" class="price-input" placeholder="∞" aria-label="Maximum price">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-actions">
+                                    <button type="button" class="filter-clear-button" id="clearPriceFilter">
+                                        გასუფთავება
+                                    </button>
+                                    <button type="button" class="filter-apply-button" id="applyPriceFilter">
+                                        არჩევა
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bedrooms Filter -->
+                        <div class="relative">
+                            <button id="bedroomButton"
+                                    class="w-full h-[42px] bg-white border border-gray-200 rounded-lg px-4 py-2 text-left flex items-center justify-between hover:border-blue-500 transition-colors"
+                                    type="button"
+                                    aria-haspopup="true"
+                                    aria-expanded="false">
+                                <span class="text-base font-medium truncate">საძინებლები</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <!-- Bedrooms Dropdown -->
+                            <div id="bedroomPopover" class="filter-dropdown hidden" role="dialog" aria-labelledby="bedroomFilterTitle">
+                                <div class="filter-dropdown-header">
+                                    <h3 id="bedroomFilterTitle">აირჩიეთ საძინებლების რაოდენობა</h3>
+                                    <button type="button" class="filter-dropdown-close" aria-label="Close bedrooms filter">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor">
+                                            <path d="M15 5L5 15M5 5L15 15" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="bedroom-options-container">
+                                    <button type="button" class="filter-option" role="option" aria-selected="false">1</button>
+                                    <button type="button" class="filter-option" role="option" aria-selected="false">2</button>
+                                    <button type="button" class="filter-option" role="option" aria-selected="false">3</button>
+                                    <button type="button" class="filter-option" role="option" aria-selected="false">4</button>
+                                    <button type="button" class="filter-option" role="option" aria-selected="false">5+</button>
+                                </div>
+                                <div class="filter-actions">
+                                    <button type="button" class="filter-clear-button" id="clearBedroomFilter">
+                                        გასუფთავება
+                                    </button>
+                                    <button type="button" class="filter-apply-button">
+                                        არჩევა
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-2">
+                            <button type="button"
+                                    id="clearAllFilters"
+                                    class="h-[42px] flex-1 inline-flex items-center justify-center gap-2 px-4 bg-gray-100 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-200 transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                                <span class="hidden sm:inline">გასუფთავება</span>
+                            </button>
+                            <button type="submit"
+                                    class="h-[42px] flex-1 inline-flex items-center justify-center px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                ძიება
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hidden inputs -->
+                    <input type="hidden" name="bedrooms" id="bedroomInput" value="">
+                    <input type="hidden" name="price_min" id="priceMinInput" value="">
+                    <input type="hidden" name="price_max" id="priceMaxInput" value="">
+                    <input type="hidden" name="filters_applied" id="filtersApplied" value="false">
+                </form>
+
+            </div>
+        </section>
+
+        <!-- Content Section: Hot Offers and Search Results -->
+        <section class="py-8 px-4 sm:px-6 lg:px-8">
+            {% if not filters_applied %}
+                <!-- Hot Offers Container -->
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">ფასდაკლებული ბინები</h2>
+                        <div class="flex items-center space-x-2">
+                            <button id="prevButton" class="w-10 h-10 rounded-full bg-gray-800 shadow-md flex items-center justify-center text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" aria-label="Previous slide">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                        </button>
+                            <button id="nextButton" class="w-10 h-10 rounded-full bg-gray-800 shadow-md flex items-center justify-center text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200" aria-label="Next slide">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="hotOffersSection" class="relative">
+                        <div class="overflow-hidden">
+                            <div class="flex transition-transform duration-300 ease-in-out -mx-4 sm:mx-0">
+                            {% for offer in hot_offers %}
+                                <div class="w-full sm:w-[calc(50%-1rem)] lg:w-[calc(33.333%-1rem)] px-4 sm:px-2 flex-shrink-0">
+                                    <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+                                        <a href="{{ url_for('listing_detail', listing_id=offer.listing_id) }}" class="block relative">
+                                            <div class="aspect-w-16 aspect-h-9 h-[200px]">
+                                    <img src="{{ offer.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
+                                                     class="object-cover w-full h-full" alt="Property image">
+                                            </div>
+                                            {% if offer.discount_amount %}
+                                            <div class="absolute top-4 right-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                                -{{ offer.discount_amount }}$
+                                            </div>
+                                            {% endif %}
+                                        </a>
+                                        <div class="p-4 flex flex-col flex-grow">
+                                            <div class="flex items-baseline justify-between mb-2">
+                                                <div class="flex items-baseline space-x-2">
+                                        {% if offer.discounted_price != offer.original_price and offer.original_price %}
+                                                    <span class="text-sm text-gray-500 line-through">${{ offer.original_price }}</span>
+                                        {% endif %}
+                                                    <span class="text-xl font-bold text-gray-900">${{ offer.discounted_price or offer.original_price }}</span>
+                                    </div>
+                                </div>
+                                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3">
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                    </svg>
+                                                    {{ offer.district }}
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                                    </svg>
+                                                    {{ offer.bedrooms }} საძინებელი
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                                    </svg>
+                                                    {{ offer.floors }} სართული
+                                                </span>
+                                                <span class="flex items-center">
+                                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                                    </svg>
+                                                    {{ offer.area }} მ²
+                                                </span>
+                                </div>
+                                            <div class="flex justify-between items-center text-xs text-gray-500 mt-auto">
+                                                <span>ID: {{ offer.listing_id }}</span>
+                                                <span>{{ offer.date_time }}</span>
+                                </div>
+                                        </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if filters_applied and listings %}
+                <!-- Search Results Section (List) -->
+                <div class="max-w-7xl mx-auto">
+                    <h2 class="text-2xl font-bold mb-4">ნაპოვნი ბინები</h2>
+                    <div id="searchResultsSection">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {% for listing in listings %}
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+                                <a href="{{ url_for('listing_detail', listing_id=listing.listing_id) }}" class="block relative">
+                                    <div class="aspect-w-16 aspect-h-9 h-[200px]">
+                                    <img src="{{ listing.thumbnail_url or '/static/images/default-thumbnail.jpg' }}"
+                                             class="object-cover w-full h-full" alt="Property image">
+                                    </div>
+                                    {% if listing.discount_amount %}
+                                    <div class="absolute top-4 right-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                        -{{ listing.discount_amount }}$
+                                    </div>
+                                    {% endif %}
+                                </a>
+                                <div class="p-4 flex flex-col flex-grow">
+                                    <div class="flex items-baseline justify-between mb-2">
+                                        <div class="flex items-baseline space-x-2">
+                                        {% if listing.discounted_price != listing.original_price and listing.original_price %}
+                                                <span class="text-sm text-gray-500 line-through">${{ listing.original_price }}</span>
+                                        {% endif %}
+                                            <span class="text-xl font-bold text-gray-900">${{ listing.discounted_price or listing.original_price }}</span>
+                                    </div>
+                                </div>
+                                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-600 mb-3">
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            </svg>
+                                            {{ listing.district }}
+                                        </span>
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                            </svg>
+                                            {{ listing.bedrooms }} საძინებელი
+                                        </span>
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                            </svg>
+                                            {{ listing.floors }} სართული
+                                        </span>
+                                        <span class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                            </svg>
+                                            {{ listing.area }} მ²
+                                        </span>
+                                </div>
+                                    <div class="flex justify-between items-center text-xs text-gray-500 mt-auto">
+                                        <span>ID: {{ listing.listing_id }}</span>
+                                        <span>{{ listing.date_time }}</span>
+                                </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center border-t border-gray-200 bg-white px-4 py-6 sm:px-6 mt-12">
+                    <nav class="isolate inline-flex items-center justify-center gap-2 rounded-md shadow-sm" aria-label="Pagination">
+                        {% set query_params = request.args.to_dict() %}
+                        {% set _ = query_params.pop('page', None) %}
+                        {% set districts = request.args.getlist('district') %}
+                        {% if districts %}
+                            {% set _ = query_params.update({'district': districts}) %}
+                        {% endif %}
+
+                        <!-- Previous Button -->
+                        {% if pagination.has_prev %}
+                            {% set prev_params = query_params.copy() %}
+                            {% set _ = prev_params.update({'page': pagination.prev_page}) %}
+                            <a href="{{ url_for('landing', **prev_params) }}"
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:z-20 focus:outline-offset-0 focus:outline focus:outline-2 focus:outline-blue-500 transition-all duration-200">
+                                <span class="sr-only">Previous</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        {% endif %}
+
+                        <!-- Page Numbers -->
+                        {% for page in pagination_range %}
+                            {% if page == '...' %}
+                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700">...</span>
+                            {% else %}
+                                {% set page_params = query_params.copy() %}
+                                {% set _ = page_params.update({'page': page}) %}
+                                <a href="{{ url_for('landing', **page_params) }}"
+                                   class="relative inline-flex items-center px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 {% if page == pagination.current_page %}bg-blue-600 text-white hover:bg-blue-700 focus:z-20 focus:outline focus:outline-2 focus:outline-blue-500{% else %}text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 focus:z-20 focus:outline focus:outline-2 focus:outline-blue-500{% endif %}">
+                                    {{ page }}
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- Next Button -->
+                        {% if pagination.has_next %}
+                            {% set next_params = query_params.copy() %}
+                            {% set _ = next_params.update({'page': pagination.next_page}) %}
+                            <a href="{{ url_for('landing', **next_params) }}"
+                               class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:z-20 focus:outline-offset-0 focus:outline focus:outline-2 focus:outline-blue-500 transition-all duration-200">
+                                <span class="sr-only">Next</span>
+                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        </section>
+
+
+   </main>
+
+   <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <!-- Main Footer Content -->
+            <div class="flex flex-col items-center md:flex-row md:justify-center md:space-x-12">
+                <!-- Contact Section -->
+                <div class="mb-6 md:mb-0 text-center md:text-left md:mr-20">
+                    <h3 class="text-lg font-bold mb-4">კონტაქტი</h3>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ჩვენ შესახებ</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">კონტაქტი</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">პარტნიორები</a></li>
+                    </ul>
+                </div>
+                <!-- Follow Us Section -->
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h3 class="text-lg font-bold mb-4">მიმდევრობები</h3>
+                    <ul>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ფასდაკლება</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">ახალი აშენებული</a></li>
+                        <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white">გაყიდვა</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Social Media Icons -->
+            <div class="mt-8 flex justify-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Facebook">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- Facebook Icon -->
+                        <path d="M22 12c0-5.522-4.478-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987H7.898v-2.89h2.54V9.797c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.991 22 12z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="Twitter">
+                    <svg class="w-6 h-6 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- Twitter Icon -->
+                        <path d="M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016.5 3c-2.74 0-4.95 2.21-4.95 4.95 0 .39.04.77.11 1.14C7.69 8.81 4.1 6.87 1.67 3.89a4.822 4.822 0 00-.66 2.48c0 1.71.87 3.23 2.19 4.12a4.493 4.493 0 01-2.24-.62v.06c0 2.38 1.69 4.36 3.95 4.81a4.6 4.6 0 01-2.23.08c.63 1.97 2.45 3.4 4.6 3.44A9.282 9.282 0 010 19.54a13.94 13.94 0 007.548 2.21c9.05 0 14-7.496 14-13.986 0-.21 0-.42-.02-.63A9.935 9.935 0 0024 4.59z"></path>
+                    </svg>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors duration-300" aria-label="LinkedIn">
+                    <svg class="w-6 h-6 md:w-8 md:h-7" fill="currentColor" viewBox="0 0 24 24">
+                        <!-- LinkedIn Icon -->
+                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-10h3v10zm-1.5-11.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 11.268h-3v-5.604c0-1.337-.025-3.065-1.868-3.065-1.869 0-2.156 1.46-2.156 2.967v5.7h-3v-10h2.884v1.367h.041c.403-.765 1.388-1.57 2.852-1.57 3.048 0 3.61 2.006 3.61 4.616v5.605z"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // State management
+        const filterState = {
+            location: new Set(),
+            price: { min: '', max: '' },
+            bedrooms: '',
+            getState() {
+                return {
+                    location: Array.from(this.location),
+                    price: { ...this.price },
+                    bedrooms: this.bedrooms
+                };
+            },
+            setState(newState) {
+                if (newState.location) this.location = new Set(newState.location);
+                if (newState.price) this.price = { ...newState.price };
+                if (newState.bedrooms) this.bedrooms = newState.bedrooms;
+                this.saveToStorage();
+            },
+            saveToStorage() {
+                localStorage.setItem('filterState', JSON.stringify(this.getState()));
+                this.updateUI();
+            },
+            loadFromStorage() {
+                const saved = localStorage.getItem('filterState');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    this.setState(parsed);
+                    return true;
+                }
+                return false;
+            },
+            clear() {
+                this.location.clear();
+                this.price = { min: '', max: '' };
+                this.bedrooms = '';
+                this.saveToStorage();
+            },
+            updateUI() {
+                // Update location checkboxes
+                document.querySelectorAll('input[name="district"]').forEach(checkbox => {
+                    checkbox.checked = this.location.has(checkbox.value);
+                });
+                updateLocationButton();
+
+                // Update price inputs
+                const minPrice = document.getElementById('min-price');
+                const maxPrice = document.getElementById('max-price');
+                if (minPrice && maxPrice) {
+                    minPrice.value = this.price.min;
+                    maxPrice.value = this.price.max;
+                }
+                updatePriceButton();
+
+                // Update bedroom selection
+                const bedroomOptions = document.querySelectorAll('#bedroomPopover [role="option"]');
+                bedroomOptions.forEach(option => {
+                    const isSelected = option.textContent.trim() === this.bedrooms;
+                    option.setAttribute('aria-selected', isSelected.toString());
+                    if (isSelected) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+                updateBedroomButton();
+            }
+        };
+
+        // Carousel Navigation - Fixed Implementation
+        function initializeCarousel() {
+            // Select the correct carousel container
+            const carouselContainer = document.querySelector('#hotOffersSection > div > div.flex');
+            const prevButton = document.getElementById('prevButton');
+            const nextButton = document.getElementById('nextButton');
+
+            if (!carouselContainer || !prevButton || !nextButton) {
+                console.error('Carousel elements not found');
+                return;
+            }
+
+            // Force necessary CSS properties
+            carouselContainer.style.overflowX = 'hidden'; // Changed from 'auto' to 'hidden'
+            carouselContainer.style.scrollBehavior = 'smooth';
+            carouselContainer.style.display = 'flex';
+            carouselContainer.style.gap = '16px';
+            carouselContainer.style.padding = '0';
+            carouselContainer.style.margin = '0';
+            carouselContainer.style.width = '100%';
+            carouselContainer.style.msOverflowStyle = 'none'; // For IE/Edge
+            carouselContainer.style.scrollbarWidth = 'none'; // For Firefox
+
+            // Hide scrollbar for Webkit browsers
+            const style = document.createElement('style');
+            style.textContent = `
+                #hotOffersSection > div > div.flex::-webkit-scrollbar {
+                    display: none;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Calculate scroll amount
+            function getScrollAmount() {
+                const firstCard = carouselContainer.querySelector('.hot-offer-card');
+                if (!firstCard) return 300; // Fallback width
+
+                const cardStyle = window.getComputedStyle(firstCard);
+                const cardWidth = firstCard.offsetWidth;
+                const cardMargin = parseInt(cardStyle.marginRight) || 0;
+                const gap = 16;
+
+                return cardWidth + gap;
+            }
+
+            // Handle scroll events
+            function handleScroll(direction) {
+                const scrollAmount = getScrollAmount();
+                const currentScroll = carouselContainer.scrollLeft;
+                const newScroll = direction === 'next'
+                    ? currentScroll + scrollAmount
+                    : currentScroll - scrollAmount;
+
+                carouselContainer.scrollTo({
+                    left: newScroll,
+                    behavior: 'smooth'
+                });
+            }
+
+            // Update button states
+            function updateButtonStates() {
+                const scrollLeft = carouselContainer.scrollLeft;
+                const maxScroll = carouselContainer.scrollWidth - carouselContainer.clientWidth;
+
+                prevButton.disabled = scrollLeft <= 0;
+                nextButton.disabled = scrollLeft >= maxScroll - 5; // Small buffer
+            }
+
+            // Add event listeners
+            prevButton.addEventListener('click', () => handleScroll('prev'));
+            nextButton.addEventListener('click', () => handleScroll('next'));
+
+            carouselContainer.addEventListener('scroll', updateButtonStates);
+            window.addEventListener('resize', updateButtonStates);
+
+            // Initial setup
+            updateButtonStates();
+        }
+
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCarousel);
+        } else {
+            initializeCarousel();
+        }
+
+        // Popover Manager
+        class PopoverManager {
+            constructor() {
+                this.activePopover = null;
+                this.overlay = document.querySelector('.modal-overlay');
+                this.init();
+            }
+
+            init() {
+                // Close on escape key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        this.closeActive();
+                    }
+                });
+
+                // Close on overlay click
+                this.overlay?.addEventListener('click', () => {
+                    this.closeActive();
+                });
+
+                // Close on click outside
+                document.addEventListener('click', (e) => {
+                    if (this.activePopover &&
+                        !e.target.closest('.filter-button-container') &&
+                        !e.target.closest('.filter-dropdown')) {
+                        this.closeActive();
+                    }
+                });
+            }
+
+            open(popover, button) {
+                if (this.activePopover) {
+                    this.closeActive();
+                }
+
+                // Hide other filter elements
+                document.querySelectorAll('.filter-button-container').forEach(container => {
+                    if (!container.contains(button)) {
+                        container.style.zIndex = '1';
+                    } else {
+                        container.style.zIndex = '1001';
+                    }
+                });
+
+                // Show popover
+                popover.classList.remove('hidden');
+                button.classList.add('active');
+                button.setAttribute('aria-expanded', 'true');
+                this.overlay?.classList.add('visible');
+                this.activePopover = { popover, button };
+
+                // Lock body scroll on mobile
+                if (window.innerWidth < 768) {
+                    document.body.style.overflow = 'hidden';
+                    popover.classList.add('visible');
+                }
+
+                // Position popover
+                requestAnimationFrame(() => {
+                    popover.style.opacity = '1';
+                    if (window.innerWidth >= 768) {
+                        const buttonRect = button.getBoundingClientRect();
+                        const popoverRect = popover.getBoundingClientRect();
+                        const rightOverflow = buttonRect.left + popoverRect.width > window.innerWidth;
+
+                        if (rightOverflow) {
+                            popover.style.left = 'auto';
+                            popover.style.right = '0';
+                        } else {
+                            popover.style.left = '0';
+                            popover.style.right = 'auto';
+                        }
+                    }
+                });
+            }
+
+            close(popover, button) {
+                if (!popover || !button) return;
+
+                // Reset z-index of all filter containers
+                document.querySelectorAll('.filter-button-container').forEach(container => {
+                    container.style.zIndex = '';
+                });
+
+                button.classList.remove('active');
+                button.setAttribute('aria-expanded', 'false');
+                this.overlay?.classList.remove('visible');
+
+                // Animate out
+                popover.style.opacity = '0';
+                if (window.innerWidth < 768) {
+                    popover.classList.remove('visible');
+                }
+
+                setTimeout(() => {
+                    popover.classList.add('hidden');
+                    popover.style.transform = '';
+                }, 200);
+
+                // Unlock body scroll
+                document.body.style.overflow = '';
+
+                this.activePopover = null;
+            }
+
+            closeActive() {
+                if (this.activePopover) {
+                    const { popover, button } = this.activePopover;
+                    this.close(popover, button);
+                }
+            }
+
+            toggle(popover, button) {
+                if (!popover || !button) return;
+
+                if (popover.classList.contains('hidden')) {
+                    this.open(popover, button);
+                } else {
+                    this.close(popover, button);
+                }
+            }
+        }
+
+        // Initialize PopoverManager
+        const popoverManager = new PopoverManager();
+
+        // Setup filter buttons
+        function setupFilter(buttonId, popoverId) {
+            const button = document.getElementById(buttonId);
+            const popover = document.getElementById(popoverId);
+
+            if (!button || !popover) return null;
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                popoverManager.toggle(popover, button);
+            });
+
+            const closeButton = popover.querySelector('.filter-dropdown-close');
+            closeButton?.addEventListener('click', () => {
+                popoverManager.close(popover, button);
+            });
+
+            // Prevent closing when clicking inside the popover
+            popover.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            return { button, popover };
+        }
+
+        // Initialize filters
+        const filters = {
+            location: setupFilter('dropdownSearchButton', 'dropdownSearch'),
+            price: setupFilter('priceButton', 'pricePopover'),
+            bedroom: setupFilter('bedroomButton', 'bedroomPopover')
+        };
+
+        // Load saved state
+        filterState.loadFromStorage();
+
+        // Handle location selection
+        const locationCheckboxes = document.querySelectorAll('input[name="district"]');
+        locationCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    filterState.location.add(this.value);
+                } else {
+                    filterState.location.delete(this.value);
+                }
+                filterState.saveToStorage();
+            });
+        });
+
+        // Price filter configuration
+        const PRICE_CONFIG = {
+            min: 0,
+            max: 10000000,
+            step: 1000,
+            debounceTime: 500,
+            format: {
+                style: 'decimal',
+                maximumFractionDigits: 0
+            }
+        };
+
+        // Shared debounce timer for all filters
+        let filterDebounceTimer = null;
+
+        // Price input elements
+        const minPrice = document.getElementById('min-price');
+        const maxPrice = document.getElementById('max-price');
+
+        // Helper function to trigger search
+        function triggerSearch() {
+            const searchForm = document.getElementById('searchForm');
+            if (searchForm) {
+                const filtersApplied = document.getElementById('filtersApplied');
+                if (filtersApplied) {
+                    filtersApplied.value = 'true';
+                }
+                searchForm.dispatchEvent(new Event('submit'));
+            }
+        }
+
+        function formatPrice(value) {
+            if (!value) return '';
+            const numValue = parseInt(value) || 0;
+            if (numValue === 0) return '';
+            return new Intl.NumberFormat('ka-GE', PRICE_CONFIG.format).format(numValue);
+        }
+
+        function unformatPrice(value) {
+            if (!value) return 0;
+            return parseInt(value.replace(/[^\d]/g, '')) || 0;
+        }
+
+        function setupPriceInput(input, isMin) {
+            if (!input) return;
+
+            // Allow typing numbers directly
+            input.addEventListener('input', function(e) {
+                // Only keep digits from the input
+                const numericValue = this.value.replace(/[^\d]/g, '');
+
+                // Update input with the numeric value (allows typing)
+                this.value = numericValue;
+            });
+
+            // Format and validate on blur
+            input.addEventListener('blur', function() {
+                // If input is empty, just clear everything
+                if (!this.value) {
+                    if (isMin) {
+                        filterState.price.min = '';
+                        document.getElementById('priceMinInput').value = '';
+                    } else {
+                        filterState.price.max = '';
+                        document.getElementById('priceMaxInput').value = '';
+                    }
+                    filterState.saveToStorage();
+                    updatePriceButton();
+                    return;
+                }
+
+                // Convert to number and apply constraints
+                let numValue = parseInt(this.value) || 0;
+                numValue = Math.min(Math.max(numValue, PRICE_CONFIG.min), PRICE_CONFIG.max);
+
+                // Round to step
+                const roundedValue = Math.round(numValue / PRICE_CONFIG.step) * PRICE_CONFIG.step;
+
+                // Format for display
+                this.value = formatPrice(roundedValue);
+
+                // Update state
+                if (isMin) {
+                    filterState.price.min = this.value;
+                    document.getElementById('priceMinInput').value = roundedValue;
+                } else {
+                    filterState.price.max = this.value;
+                    document.getElementById('priceMaxInput').value = roundedValue;
+                }
+
+                // Ensure min/max relationship
+                const minVal = unformatPrice(minPrice.value);
+                const maxVal = unformatPrice(maxPrice.value);
+
+                if (minVal && maxVal && minVal > maxVal) {
+                    if (isMin) {
+                        maxPrice.value = this.value;
+                        filterState.price.max = this.value;
+                        document.getElementById('priceMaxInput').value = roundedValue;
+                    } else {
+                        minPrice.value = this.value;
+                        filterState.price.min = this.value;
+                        document.getElementById('priceMinInput').value = roundedValue;
+                    }
+                }
+
+                filterState.saveToStorage();
+                updatePriceButton();
+
+                // Trigger search with delay
+                clearTimeout(filterDebounceTimer);
+                filterDebounceTimer = setTimeout(() => {
+                    triggerSearch();
+                }, PRICE_CONFIG.debounceTime);
+            });
+        }
+
+        // Initialize price inputs
+        if (minPrice && maxPrice) {
+            setupPriceInput(minPrice, true);
+            setupPriceInput(maxPrice, false);
+        }
+
+        // Update price button text
+        function updatePriceButton() {
+            const button = document.getElementById('priceButton');
+            const buttonText = button?.querySelector('span');
+            if (buttonText) {
+                const min = filterState.price.min || '0';
+                const max = filterState.price.max || '∞';
+                const hasPrice = min !== '0' || max !== '∞';
+
+                buttonText.textContent = hasPrice ?
+                    `${min} - ${max}` :
+                    'ფასი';
+                button.classList.toggle('active', hasPrice);
+            }
+        }
+
+        // Handle bedroom selection
+        const bedroomOptions = document.querySelectorAll('#bedroomPopover [role="option"]');
+        const bedroomInput = document.getElementById('bedroomInput');
+
+        function updateBedroomSelection(selectedOption) {
+            // Update visual state
+            bedroomOptions.forEach(option => {
+                const isSelected = option === selectedOption;
+                option.setAttribute('aria-selected', isSelected.toString());
+                option.classList.toggle('selected', isSelected);
+            });
+
+            // Update state
+            const value = selectedOption ? selectedOption.textContent.trim() : '';
+            filterState.bedrooms = value;
+            bedroomInput.value = value;
+            filterState.saveToStorage();
+            updateBedroomButton();
+        }
+
+        bedroomOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const isCurrentlySelected = this.getAttribute('aria-selected') === 'true';
+
+                if (isCurrentlySelected) {
+                    // Deselect if clicking the same option
+                    updateBedroomSelection(null);
+                } else {
+                    // Select new option
+                    updateBedroomSelection(this);
+                }
+            });
+        });
+
+        // Apply button handlers
+        document.querySelectorAll('.filter-apply-button').forEach(button => {
+            button.addEventListener('click', () => {
+                triggerSearch();
+                popoverManager.closeActive();
+            });
+        });
+
+        // Clear button handlers
+        document.getElementById('clearSelection')?.addEventListener('click', () => {
+            filterState.location.clear();
+            filterState.saveToStorage();
+        });
+
+        document.getElementById('clearPriceFilter')?.addEventListener('click', () => {
+            filterState.price = { min: '', max: '' };
+            filterState.saveToStorage();
+
+            // Reset input fields
+            if (minPrice) minPrice.value = '';
+            if (maxPrice) maxPrice.value = '';
+
+            // Reset hidden inputs
+            document.getElementById('priceMinInput').value = '';
+            document.getElementById('priceMaxInput').value = '';
+
+            updatePriceButton();
+        });
+
+        document.getElementById('clearBedroomFilter')?.addEventListener('click', () => {
+            filterState.bedrooms = '';
+            filterState.saveToStorage();
+        });
+
+        // Update button text functions
+        function updateLocationButton() {
+            const button = document.getElementById('dropdownSearchButton');
+            const buttonText = button?.querySelector('span');
+            if (buttonText) {
+                const count = filterState.location.size;
+                buttonText.textContent = count === 0 ? 'მდებარეობა' :
+                                       count === 1 ? Array.from(filterState.location)[0] :
+                                       `${count} მდებარეობა`;
+                button.classList.toggle('active', count > 0);
+            }
+        }
+
+        function updateBedroomButton() {
+            const button = document.getElementById('bedroomButton');
+            const buttonText = button?.querySelector('span');
+            if (buttonText) {
+                const value = filterState.bedrooms;
+                buttonText.textContent = value ?
+                    `${value} საძინებელი` :
+                    'საძინებლები';
+                button.classList.toggle('active', !!value);
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('searchForm')?.addEventListener('submit', function() {
+            const filtersApplied = document.getElementById('filtersApplied');
+            if (filtersApplied) {
+                filtersApplied.value = 'true';
+            }
+        });
+
+        // Clear All Filters Button Handler
+        document.getElementById('clearAllFilters')?.addEventListener('click', () => {
+            // Clear all filters
+            filterState.clear();
+
+            // Close all popovers
+            popoverManager.closeActive();
+
+            // Reset form
+            const searchForm = document.getElementById('searchForm');
+            if (searchForm) {
+                searchForm.reset();
+            }
+
+            // Reset price inputs explicitly
+            if (minPrice) minPrice.value = '';
+            if (maxPrice) maxPrice.value = '';
+
+            // Update UI
+            filterState.updateUI();
+
+            // Trigger search
+            triggerSearch();
+
+            // Add visual feedback
+            const button = document.getElementById('clearAllFilters');
+            if (button) {
+                button.classList.add('bg-red-50', 'border-red-200', 'text-red-600');
+                setTimeout(() => {
+                    button.classList.remove('bg-red-50', 'border-red-200', 'text-red-600');
+                }, 500);
+            }
+        });
+
+        // Burger Menu Implementation
+        const burger = document.getElementById('burger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenu = document.getElementById('close-menu');
+        const menuOverlay = document.querySelector('.menu-overlay');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('hidden');
+            menuOverlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+            burger.classList.add('active');
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('hidden');
+            menuOverlay.classList.remove('visible');
+            document.body.style.overflow = '';
+            burger.classList.remove('active');
+        }
+
+        if (burger && mobileMenu) {
+            burger.addEventListener('click', openMobileMenu);
+            closeMenu?.addEventListener('click', closeMobileMenu);
+            menuOverlay?.addEventListener('click', closeMobileMenu);
+
+            // Close menu on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            });
+
+            // Close menu when clicking a menu item
+            const menuItems = mobileMenu.querySelectorAll('a');
+            menuItems.forEach(item => {
+                item.addEventListener('click', closeMobileMenu);
+            });
+        }
+    });
+</script>
+
+</body>
+</html>

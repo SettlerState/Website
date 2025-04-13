@@ -121,15 +121,20 @@ def extract_attributes(full_worksheet, links):
         if not listing_id or not re.match(r'^\d{6}$', listing_id):
             continue  # Skip rows without valid IDs
 
-        # Normalize the link
-        link = normalize_link(row[5]) if len(row) > 5 else ''
+        # Check for valid Drive link first
+        folder_link = row[drive_link_col] if len(row) > drive_link_col else ''
+        if not folder_link:
+            continue  # Skip listings without Drive links
+
+        folder_id = normalize_folder_link(folder_link)
+        if not folder_id:
+            continue  # Skip listings with invalid Drive links
 
         # Extract other attributes
+        link = normalize_link(row[5]) if len(row) > 5 else ''
         description = row[description_col].strip() if len(row) > description_col else 'Description not available'
-        discounted_price = row[discounted_price_col].strip() if len(row) > discounted_price_col else ('Price not '
-                                                                                                      'available')
-        original_price = row[original_price_col].strip() if len(row) > original_price_col else ('Original Price not '
-                                                                                                'available')
+        discounted_price = row[discounted_price_col].strip() if len(row) > discounted_price_col else ('Price not available')
+        original_price = row[original_price_col].strip() if len(row) > original_price_col else ('Original Price not available')
         date_time = row[add_time_col].strip() if len(row) > add_time_col else 'Date not available'
 
         # Normalize prices
@@ -157,33 +162,23 @@ def extract_attributes(full_worksheet, links):
         discount_str = f"{discount_amount:,.0f}" if discount_amount and discount_amount > 0 else ""
 
         # Handle image paths
-        folder_link = row[drive_link_col] if len(row) > drive_link_col else ''
-        if not folder_link:
-            logger.warning(f"Empty folder link for listing ID: {listing_id}")
-            image_urls = [url_for('static', filename='images/no_image_available.jpg')]
-        else:
-            folder_id = normalize_folder_link(folder_link)
-            if folder_id:
-                folder_name = f"myhome.ge_{listing_id}_დამუშავებული"
-                logger.debug(f"Attempting to access folder: {folder_name} ({folder_id})")
+        folder_name = f"myhome.ge_{listing_id}_დამუშავებული"
+        logger.debug(f"Attempting to access folder: {folder_name} ({folder_id})")
 
-                # Check if images are already downloaded
-                full_folder_path = os.path.join(IMAGE_CACHE_DIR, folder_name)
-                if os.path.exists(full_folder_path):
-                    image_urls = [
-                        url_for('static', filename=os.path.relpath(
-                            os.path.join(full_folder_path, f), 'static'
-                        ).replace('\\', '/'))
-                        for f in os.listdir(full_folder_path)
-                        if f.endswith('.jpg')
-                    ]
-                else:
-                    # Trigger the Celery task to download images asynchronously
-                    download_images_from_drive_folder_async.delay(folder_id, folder_name)
-                    image_urls = [url_for('static', filename='images/no_image_available.jpg')]
-            else:
-                logger.error(f"Invalid folder link: {folder_link}")
-                image_urls = [url_for('static', filename='images/no_image_available.jpg')]
+        # Check if images are already downloaded
+        full_folder_path = os.path.join(IMAGE_CACHE_DIR, folder_name)
+        if os.path.exists(full_folder_path):
+            image_urls = [
+                url_for('static', filename=os.path.relpath(
+                    os.path.join(full_folder_path, f), 'static'
+                ).replace('\\', '/'))
+                for f in os.listdir(full_folder_path)
+                if f.endswith('.jpg')
+            ]
+        else:
+            # Trigger the Celery task to download images asynchronously
+            download_images_from_drive_folder_async.delay(folder_id, folder_name)
+            image_urls = [url_for('static', filename='images/no_image_available.jpg')]
 
         thumbnail_url = image_urls[0] if image_urls else url_for('static', filename='images/no_image_available.jpg')
 
@@ -203,7 +198,7 @@ def extract_attributes(full_worksheet, links):
             "bathrooms": row[7] if len(row) > 7 and row[7].isdigit() else '1',
             "build_period": row[8] if len(row) > 8 else 'N/A',
             "renovation": row[9] if len(row) > 9 else 'N/A',
-            "listing_id": listing_id,  # Correctly set unique ID
+            "listing_id": listing_id,
             "date_time": date_time,
         }
 
@@ -351,7 +346,7 @@ def landing():
     pagination_range = get_page_range(page, total_pages)
 
     return render_template(
-        'landing page with filter.html',
+        'landing_page_with_filter.html',
         listings=paginated_listings,
         hot_offers=hot_offers if not filters_applied else [],  # Hide hot offers if filters exist
         districts=distinct_districts,
@@ -402,3 +397,5 @@ def without_filter():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
