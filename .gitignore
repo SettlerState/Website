@@ -7,3 +7,4 @@ chromedriver
 venv/
 __pycache__/
 static/images
+old_version.html
