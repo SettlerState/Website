@@ -26,8 +26,9 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 # creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
 
-# creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
-creds_path = os.path.expanduser("/home/tatuliusi/production/secrets/creds.json")
+creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+# creds_path = os.path.expanduser("/home/tatuliusi/production/secrets/creds.json")
+#creds_path = os.path.expanduser("/home/settleradmin/production/Website/creds.json")
 
 # Global variables
 listings = []

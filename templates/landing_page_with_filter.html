@@ -1625,7 +1625,7 @@
                                 </div>
                                             <div class="flex justify-between items-center text-xs text-gray-500 mt-auto">
                                                 <span>ID: {{ offer.listing_id }}</span>
-                                                <span>{{ offer.date_time }}</span>
+                                                <span>{{ offer.date_time.split()[0] }}</span>
                                 </div>
                                         </div>
                                 </div>
@@ -1694,7 +1694,7 @@
                                 </div>
                                     <div class="flex justify-between items-center text-xs text-gray-500 mt-auto">
                                         <span>ID: {{ listing.listing_id }}</span>
-                                        <span>{{ listing.date_time }}</span>
+                                        <span>{{ listing.date_time.split()[0] }}</span>
                                 </div>
                                 </div>
                             </div>
