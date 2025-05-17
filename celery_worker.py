@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 
 # Initialize Google Drive API
 scope = ['https://www.googleapis.com/auth/drive']
-creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+
+#creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+creds_path = os.path.expanduser("/home/settleradmin/production/Website/creds.json")
 creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
 drive_service = build('drive', 'v3', credentials=creds)
 

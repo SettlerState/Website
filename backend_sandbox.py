@@ -26,9 +26,8 @@ with open('config.json') as config_file:
     config = json.load(config_file)
 # creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
 
-creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
-# creds_path = os.path.expanduser("/home/tatuliusi/production/secrets/creds.json")
-#creds_path = os.path.expanduser("/home/settleradmin/production/Website/creds.json")
+#creds_path = r'/mnt/c/Users/Lenovo/PycharmProjects/Website/creds.json'
+creds_path = os.path.expanduser("/home/settleradmin/production/Website/creds.json")
 
 # Global variables
 listings = []
@@ -114,7 +113,7 @@ def extract_attributes(full_worksheet, links):
     description_col = 13
     discounted_price_col = 12
     original_price_col = 3
-    floors_col = 7
+    floors_col = 6
     id_col = 0  # Column A for the 4-digit ID
     add_time_col = 11
     drive_link_col = 16  # Column Q for Google Drive folder links
@@ -168,7 +167,7 @@ def extract_attributes(full_worksheet, links):
         discount_str = f"{discount_amount:,.0f}" if discount_amount and discount_amount > 0 else ""
 
         # Handle image paths
-        folder_name = f"myhome.ge_{listing_id}_დამუშავებული"
+        folder_name = f"{listing_id}_დამუშავებული"
         logger.debug(f"Attempting to access folder: {folder_name} ({folder_id})")
 
         # Check if images are already downloaded
@@ -352,7 +351,7 @@ def landing():
     pagination_range = get_page_range(page, total_pages)
 
     return render_template(
-        'landing_page_with_filter.html',
+        'landing.html',
         listings=paginated_listings,
         hot_offers=hot_offers if not filters_applied else [],  # Hide hot offers if filters exist
         districts=distinct_districts,
@@ -384,21 +383,12 @@ def blog():
     return render_template('blog.html')
 
 
-@app.route('/test_env')
-def test_env():
-    creds_json = os.getenv('GOOGLE_CLOUD_CREDENTIALS')
-    if creds_json:
-        logger.info(f"Environment variable value: {creds_json}")
-        return "Environment variable is set.", 200
-    return "Environment variable is not set or empty.", 500
-
-
-@app.route('/without')
-def without_filter():
+@app.route('/landing')
+def landing_page():
     global listings
     if not listings:
         initialize_listings()  # Ensure listings are loaded if not already initialized
-    return render_template('without_filter.html', listings=listings)
+    return render_template('landing.html', listings=listings)
 
 
 if __name__ == '__main__':
