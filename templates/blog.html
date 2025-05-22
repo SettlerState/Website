@@ -15,7 +15,7 @@
     <title>ბლოგი</title>
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
     <!-- Header already provided above, including it in your complete page -->
@@ -25,88 +25,17 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h2 class="text-2xl font-semibold mb-5" style="color: #337680;">ახალი პოსტები</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <!-- Example Blog Post -->
+            {% for post in posts %}
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
+                <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-48 object-cover">
                 <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
+                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">{{ post.title }}</h3>
+                    <p class="text-gray-600">{{ post.date }}</p>
+                    <p class="text-gray-800 mb-4">{{ post.excerpt }}</p>
+                    <a href="{{ url_for('blog.blog_post', post_id=post.id) }}" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
                 </div>
             </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">ახალი თუ ძველი აშენებული ბინები?</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">რა უპირატესობა აქვთ ძველ ბინებს ახლებთან შედარებით?...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">როგორ მოვაწყოთ ახალი ბინა იაფად?</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ახალი ბინის ყიდვას იმაზე მეტი ხარჯი ახლავს ვიდრე წარმოგვიდგენია...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">საუკეთესო პერიოდი ბინის შესაძენად</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">აქვს მნიშვნელობა რომელ სეზონზე შევიძენთ ბინას?...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img src="{{ url_for('static', filename='pics/cover.jpeg') }}" alt="Blog Image" class="w-full h-48 object-cover">
-                <div class="bg-white rounded-lg shadow-lg p-6">
-                    <h3 class="font-semibold text-xl mb-2" style="color: #337680;">რა უნდა ვიცოდეთ უძრავი ქონების ბაზარზე</h3>
-                    <p class="text-gray-600">დაიპოსტა 28 აპრილს, 2024</p>
-                    <p class="text-gray-800 mb-4">ბოლო წლების მანძილზე უძრავი ქონების დეფიციტმა მისი ფასები თითქმის გააორმაგა ...</p>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">მეტის წაკითხვა</a>
-                </div>
-            </div>      
+            {% endfor %}
         </div>
     </div>
 

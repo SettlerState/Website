@@ -7,8 +7,11 @@ import requests
 from flask import Flask, render_template, request, url_for, send_from_directory
 from oauth2client.service_account import ServiceAccountCredentials
 from googleapiclient.discovery import build
+
+from blog import blog_posts, blog_bp
 from celery_worker import download_images_from_drive_folder_async
 from utils import download_images_from_drive_folder
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -22,6 +25,7 @@ scope = [
 
 # Initialize Flask app
 app = Flask(__name__)
+app.register_blueprint(blog_bp)
 with open('config.json') as config_file:
     config = json.load(config_file)
 # creds_path = os.getenv('GOOGLE_CLOUD_CREDENTIALS') or config.get('creds_path')
@@ -380,7 +384,7 @@ def listing_detail(listing_id):
 
 @app.route('/blog')
 def blog():
-    return render_template('blog.html')
+    return render_template('blog.html', posts=blog_posts)
 
 
 @app.route('/landing')
