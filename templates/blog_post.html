@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZCWKHZM60"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-4ZCWKHZM60');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }}</title>
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <!-- Header will be included here -->
+
+    <!-- Blog Post Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <article class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-96 object-cover">
+            <div class="p-8">
+                <h1 class="text-3xl font-bold mb-4" style="color: #337680;">{{ post.title }}</h1>
+                <div class="flex items-center text-gray-600 mb-6">
+                    <span class="mr-4">{{ post.date }}</span>
+                    <span>ავტორი: {{ post.author }}</span>
+                </div>
+                <div class="prose max-w-none">
+                    {{ post.content | safe }}
+                </div>
+            </div>
+        </article>
+
+        <!-- Back to Blog List -->
+        <div class="mt-8">
+            <a href="{{ url_for('blog.blog') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                დაბრუნება ბლოგის სიაში
+            </a>
+        </div>
+    </div>
+</body>
+</html>
