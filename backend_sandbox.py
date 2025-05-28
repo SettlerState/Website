@@ -55,7 +55,7 @@ def initialize_sheets():
         try:
             creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
             client = gspread.authorize(creds)
-            full_worksheet = client.open("Owners - December backup").worksheet("owner listings")
+            full_worksheet = client.open("owners - 14 may").worksheet("owner listings")
         except Exception as e:
             logger.error(f"An error occurred: {e}")
     return full_worksheet

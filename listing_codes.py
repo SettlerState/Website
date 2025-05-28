@@ -98,7 +98,7 @@ def assign_ascending_ids(creds_file, sheet_name):
 if __name__ == '__main__':
     #creds_file = 'creds.json'  # Path to Google service account credentials
     creds_file = os.path.expanduser("/home/settleradmin/production/Website/creds.json")
-    sheet_name = 'Owners - December backup'  # Name of Google Sheet
+    sheet_name = 'owners - 14 may'
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(
