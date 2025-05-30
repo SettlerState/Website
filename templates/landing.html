@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Preload font -->
+    <link rel="preload" href="{{ url_for('static', filename='fonts/Avaza.ttf') }}" as="font" type="font/ttf" crossorigin>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZCWKHZM60"></script>
     <script>
@@ -20,10 +23,24 @@
     <meta property="og:url" content="https://www.settler.ge/">
     <meta property="og:type" content="website">
    <title>Settler | ბინები საუკეთესო ფასად</title>
-   <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-   <script src="https://cdn.tailwindcss.com"></script>
+
+   <!-- Load custom CSS first -->
    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
+
+   <!-- Load Tailwind with custom configuration -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script>
+     tailwind.config = {
+       theme: {
+         extend: {
+           fontFamily: {
+             sans: ['Avaza', 'sans-serif'],
+           },
+         },
+       },
+     }
+   </script>
+   <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
 </head>
 <body class="bg-gray-100">
     <!-- Menu Overlay (moved outside header) -->
