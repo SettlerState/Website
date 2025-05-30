@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Preload font -->
+    <link rel="preload" href="{{ url_for('static', filename='fonts/Avaza.ttf') }}" as="font" type="font/ttf" crossorigin>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZCWKHZM60"></script>
     <script>
@@ -32,22 +35,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='pics/favicon.png') }}">
     <style>
-        @font-face {
-            font-family: 'BPG Nino Mtavruli';
-            src: url('https://fonts.ge/wp-content/uploads/fonts/bpg-nino-mtavruli-webfont.eot');
-            src: url('https://fonts.ge/wp-content/uploads/fonts/bpg-nino-mtavruli-webfont.eot?#iefix') format('embedded-opentype'),
-                 url('https://fonts.ge/wp-content/uploads/fonts/bpg-nino-mtavruli-webfont.woff2') format('woff2'),
-                 url('https://fonts.ge/wp-content/uploads/fonts/bpg-nino-mtavruli-webfont.woff') format('woff'),
-                 url('https://fonts.ge/wp-content/uploads/fonts/bpg-nino-mtavruli-webfont.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
+        /* Remove conflicting font declarations */
         body {
-            font-family: 'BPG Nino Mtavruli', 'Inter', sans-serif;
             background-color: #f8fafc;
             min-height: 100vh;
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Add font fallbacks for non-Georgian text */
@@ -57,7 +51,7 @@
         .image-counter,
         .swiper-button-next:after,
         .swiper-button-prev:after {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-avaza), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
         }
 
         .container {

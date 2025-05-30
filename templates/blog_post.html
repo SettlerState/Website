@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Preload font -->
+    <link rel="preload" href="{{ url_for('static', filename='fonts/Avaza.ttf') }}" as="font" type="font/ttf" crossorigin>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4ZCWKHZM60"></script>
     <script>
@@ -13,9 +16,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ post.title }}</title>
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
+     <!-- Load Tailwind with custom configuration -->
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script>
+     tailwind.config = {
+       theme: {
+         extend: {
+           fontFamily: {
+             sans: ['Avaza', 'sans-serif'],
+           },
+         },
+       },
+     }
+   </script>
     <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Add font fallbacks for non-Georgian text */
+        .post-title,
+        .post-date,
+        .post-content,
+        .post-meta {
+            font-family: var(--font-avaza), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+        }
+
+        /* ... rest of existing styles ... */
+    </style>
 </head>
 <body class="bg-gray-100">
     <!-- Header will be included here -->
